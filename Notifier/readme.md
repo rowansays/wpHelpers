@@ -10,7 +10,7 @@ unique. After these steps have been completed you should include the file into
 your extension and create a memoized factory function which returns an
 instance of `Notifier`. For example:
 
-```
+```PHP
 declare(strict_types = 1);
 
 namespace myName\Wp\myProject;
@@ -35,7 +35,7 @@ Once your project is has been set up you'll need to hook into WordPress. This
 can be done by calling the `Notifier::hook()` method directly from our factory
 function during the [admin_init action](https://developer.wordpress.org/reference/hooks/admin_init/).
 
-```
+```PHP
 add_action('admin_init', function() {
   Notifier()->hook();
 });
@@ -55,7 +55,7 @@ Each of these methods accept a single parameter which must be an instance of
 
 #### Display a notice on all admin screens:
 
-```
+```PHP
   Notifier()->notifyAdmin(new Notice('error', 'Something bad happened.'));
   Notifier()->notifyAdmin(new Notice('info', 'You should know about this.'));
   Notifier()->notifyAdmin(new Notice('success', 'Something good happened.'));
@@ -64,7 +64,7 @@ Each of these methods accept a single parameter which must be an instance of
 
 #### Display a notice on all network admin screens:
 
-```
+```PHP
   Notifier()->notifyNetwork(new Notice('error', 'Something bad happened.'));
   Notifier()->notifyNetwork(new Notice('info', 'You should know about this.'));
   Notifier()->notifyNetwork(new Notice('success', 'Something good happened.'));

@@ -1,5 +1,7 @@
 # Notifier
 
+Renders notices in the admin section of WordPress.
+
 ## Usage
 
 ### Setup
@@ -84,26 +86,76 @@ action. These are:
 Each of these methods accept a single parameter which must be an instance of
 `Notice`. Various examples follow illustrating the use of these methods.
 
-#### Display a notice on all admin screens:
+#### All Admin Screens:
 
 ```PHP
   Notifier()->notifyAdmin(Info('You should know about this.'));
 ```
 
-#### Display a notice on all network admin screens:
+#### All Network Admin Screens:
 
 ```PHP
   Notifier()->notifyNetwork(Error('Something bad happened.'));
 ```
 
-#### Display a notice only on the dashboard:
+#### Only on the Dashboard:
 
 ```PHP
   Notifier()->notifyAdmin(Success('Something good happened.')->showOn('dashboard'));
 ```
 
-#### Display a notice on all admin screens except the dashboard:
+#### All Admin Screens Except the Dashboard:
 
 ```PHP
-  Notifier()->notifyAdmin(Warning('Your attention is needed!')->showOn('dashboard'));
+  Notifier()->notifyAdmin(Warning('Your attention is needed!')->hideOn('dashboard'));
+```
+
+### Redirecting
+
+When validating a POST request, it is often helpful to redirect with a
+specific error message after the request has been procecessed and when the
+request fails . The `Notifier::redirect()` method can be used for both
+instances. This method has a simple signature accepting a URL and a Notice as
+parameters.
+
+The following code creates a simple admin screen with a form that has a button
+for each notice type. When each button is pressed, the form is submitted and the
+user is redirected back to the custom screen with the custom notice appended to
+the URL. The notice is, almost immediately, removed from the URL using the
+[removable_query_args](https://developer.wordpress.org/reference/functions/wp_removable_query_args/)
+feature of WordPress.
+
+```PHP
+add_action('admin_menu', function () {
+  add_management_page(
+    'Notifier Test',
+    'Notifier Test',
+    'edit_plugins',
+    'RowanSaysNotifierTest',
+    function () {
+      echo '' .
+        '<div class="wrap">' .
+          '<h1>Notifier Test</h1>' .
+          '<form method="post" action="admin-post.php">' .
+            '<input type="hidden" name="action" value="RowanSaysTestNotifier">' .
+            '<input type="submit" class="button-primary" name="type" value="error"> ' .
+            '<input type="submit" class="button-primary" name="type" value="success"> ' .
+            '<input type="submit" class="button-primary" name="type" value="info"> ' .
+            '<input type="submit" class="button-primary" name="type" value="warning"> ' .
+          '</form>' .
+        '</div>'
+      ;
+    }
+  );
+});
+
+add_action('admin_post_RowanSaysTestNotifier', function () {
+  $url = add_query_arg(['page' => 'RowanSaysNotifierTest'], admin_url('tools.php'));
+  switch($_POST['type']) {
+    case 'error' : Notifier()->redirect($url, Error('Error notice from URL'));
+    case 'info' : Notifier()->redirect($url, Info('Info notice from URL'));
+    case 'success' : Notifier()->redirect($url, Success('Success notice from URL'));
+    case 'warning' : Notifier()->redirect($url, Warning('Warning notice from URL'));
+  }
+});
 ```

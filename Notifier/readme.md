@@ -56,8 +56,9 @@ Four factory functions are available to create notices.
 These factory functions all share the same signature. They accept a `string` as
 their first parameter. This represents the user-facing text of the notice.
 Zero or more parameters may follow the first and represent values which will be
-passed, along with the first, to `sprintf()` allowing for the use of formatted
-strings in the first parameter.
+passed, along with the first, to `sprintf()` allowing for the use of
+[formatted strings](https://www.php.net/manual/en/function.printf.php) in the
+first parameter.
 
 #### Create a Notice
 
@@ -70,8 +71,6 @@ $notice = Info("There's a crack in everything. That's how the light gets in.");
 ```PHP
 $notice = Info("There's a crack in %1$s. That's how the %2$s gets in.", 'everything', 'light');
 ```
-
-https://www.php.net/manual/en/function.printf.php
 
 ### Registering Notices
 
@@ -88,17 +87,23 @@ Each of these methods accept a single parameter which must be an instance of
 #### Display a notice on all admin screens:
 
 ```PHP
-  Notifier()->notifyAdmin(Error('Something bad happened.'));
   Notifier()->notifyAdmin(Info('You should know about this.'));
-  Notifier()->notifyAdmin(Success('Something good happened.'));
-  Notifier()->notifyAdmin(Warning('Be afraid. Be very afraid.'));
 ```
 
 #### Display a notice on all network admin screens:
 
 ```PHP
   Notifier()->notifyNetwork(Error('Something bad happened.'));
-  Notifier()->notifyNetwork(Info('You should know about this.'));
-  Notifier()->notifyNetwork(Success('Something good happened.'));
-  Notifier()->notifyNetwork(Warning('Be afraid. Be very afraid.'));
+```
+
+#### Display a notice only on the dashboard:
+
+```PHP
+  Notifier()->notifyAdmin(Success('Something good happened.')->showOn('dashboard'));
+```
+
+#### Display a notice on all admin screens except the dashboard:
+
+```PHP
+  Notifier()->notifyAdmin(Warning('Your attention is needed!')->showOn('dashboard'));
 ```

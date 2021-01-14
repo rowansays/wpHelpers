@@ -2,17 +2,17 @@
 /**
  * Admin Notifier.
  *
- * Easy registration and rendering of user-facing admin notices.
+ * Easy registration and rendering of user-facing notices.
  *
- * @package RowanSays\WpHelpers
+ * @package RowanSays\Wp\Helpers
  * @author Rowan Weathers
  * @license GPL-3.0-or-later
- * @version 0.3.0
+ * @version 0.3.1
  */
 
 declare(strict_types = 1);
 
-namespace RowanSays\Wp\Admin;
+namespace RowanSays\Wp\Helpers;
 
 class Notifier {
   /**

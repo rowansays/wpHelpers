@@ -55,10 +55,10 @@ Four factory functions are available to create notices.
   1. `Success()` - renders with a green side border.
   1. `Warning()` - renders with an orange side border.
 
-These factory functions all share the same signature. They accept a `string` as
-their first parameter. This represents the user-facing text of the notice.
-Zero or more parameters may follow the first and represent values which will be
-passed, along with the first, to `sprintf()` allowing for the use of
+These functions all share the same signature. They accept a `string` as their
+first parameter. This represents the user-facing text of the notice. Zero or
+more parameters may follow the first and represent values which will be passed,
+along with the first, to `sprintf()` allowing for the use of
 [formatted strings](https://www.php.net/manual/en/function.printf.php) in the
 first parameter.
 

@@ -163,9 +163,6 @@ abstract class AbstractNotice implements NoticeInterface {
   public function getClasses() : array {
     return $this->classes;
   }
-  public function getClassList() : string {
-    return implode(' ', $this->classes);
-  }
   public function getText() : string {
     return $this->text;
   }
@@ -300,7 +297,7 @@ abstract class AbstractNotifier implements NotifierInterface {
     foreach($this->notices as $notice) {
       if ($notice->isRenderable()) {
         echo vsprintf('<div class="%1$s"><p>%2$s</p></div>', [
-          '1: classList' => esc_html($notice->getClassList()),
+          '1: classList' => esc_html(implode(' ', $notice->getClasses())),
           '2: innerText' => $notice->getText()
         ]);
       }
@@ -322,7 +319,7 @@ abstract class AbstractNotifier implements NotifierInterface {
   }
   private function hashNotice(NoticeInterface $notice) : string {
     return md5(
-      implode(' ', $notice->getClassList()) .
+      implode(' ', $notice->getClasses()) .
       $notice->getType() .
       $notice->getText()
     );

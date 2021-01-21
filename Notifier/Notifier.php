@@ -340,18 +340,11 @@ abstract class AbstractAdminNotifier extends AbstractNotifier {
    * @return bool
    */
   public function hasNoticesForScreen (string $screenId) : bool {
-    $all = array_merge(
-      $this->adminNotices,
-      $this->networkNotices,
-      $this->queryNotices
-    );
-
-    foreach($all as $notice) {
+    foreach($this->notices as $notice) {
       if ($notice->existsOnScreen($screenId)) {
         return true;
       }
     }
-
     return false;
   }
 }

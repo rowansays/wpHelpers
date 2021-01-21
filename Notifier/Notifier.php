@@ -74,7 +74,7 @@ abstract class AbstractNotice implements NoticeInterface {
    */
   public function __construct (
     string $type = 'info',
-    string $text,
+    string $text = '',
     array $classes = [],
     array $userIds = [],
     array $capabilities = []

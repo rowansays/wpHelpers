@@ -20,7 +20,21 @@ namespace Please\Change\Me;
 interface NoticeInterface {
   public function getClasses() : array;
   public function isRenderable() : bool;
+  /**
+   * Only display this notice to given users.
+   *
+   * @param \WP_User|int|string ...$userId One or more user ids.
+   * @return NoticeInterface
+   * @throws \Exception when no parameters are given.
+   */
   public function forUser (...$users) : NoticeInterface;
+  /**
+   * Only display this notice to those who have a given capability.
+   *
+   * @param string ...$capabilities One or more capabilites.
+   * @return NoticeInterface
+   * @throws \Exception when no parameters are given.
+   */
   public function forUsersWhoCan (string ...$capabilities) : NoticeInterface;
   public function getCapabilities() : array;
   public function getText() : string;
@@ -104,13 +118,6 @@ abstract class AbstractNotice implements NoticeInterface {
   public function __set ($name, $value) {
     throw new \Exception('Mutation of a read-only instance is not permitted.');
   }
-  /**
-   * Only display this notice to given users.
-   *
-   * @param \WP_User|int|string ...$userId One or more user ids.
-   * @return NoticeInterface
-   * @throws \Exception when no parameters are given.
-   */
   public function forUser (...$users) : NoticeInterface {
     $userIds = [];
     foreach($users as $user) {
@@ -140,13 +147,6 @@ abstract class AbstractNotice implements NoticeInterface {
       'userIds' => array_unique(array_merge($this->userIds, $params))
     ]);
   }
-  /**
-   * Only display this notice to those who have a given capability.
-   *
-   * @param string ...$capabilities One or more capabilites.
-   * @return NoticeInterface
-   * @throws \Exception when no parameters are given.
-   */
   public function forUsersWhoCan (string ...$capabilities) : NoticeInterface {
     $params = array_filter(array_unique(array_values($capabilities)));
     if (count($params) === 0) {

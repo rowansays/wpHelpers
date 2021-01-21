@@ -34,12 +34,58 @@ interface NoticeInterface {
    * @throws \Exception when no parameters are given.
    */
   public function forUsersWhoCan (string ...$capabilities) : NoticeInterface;
+  /**
+   * Get a list of capabilities that a user must have to view this notice.
+   *
+   * @return string[]
+   */
   public function getCapabilities() : array;
+  /**
+   * Get a list of values which will be used as values for this notice's class
+   * attribute when rendered as HTML.
+   *
+   * @return string[]
+   */
   public function getClasses() : array;
+  /**
+   * Get this notice's text value.
+   *
+   * This the content of the notice and is intended to be displayed directly to
+   * users.
+   *
+   * @return string
+   */
   public function getText() : string;
+  /**
+   * Get the type of notice.
+   *
+   * Adds context to the notice.
+   *
+   * @return string
+   */
   public function getType() : string;
+  /**
+   * Get a list of user ids.
+   *
+   * This list represents an inclusive list of users who are permitted to view
+   * this notice. The notice will be displayed only to them. When defined,
+   * these values take precedence over any capabilities defined on the notice.
+   *
+   * @return int[] A list of WordPress user ids.
+   */
   public function getUserIds() : array;
+  /**
+   * Will this notice be rendered in the current environment?
+   *
+   * @return bool
+   */
   public function isRenderable() : bool;
+  /**
+   * Create a derivative notices with one or more classes added.
+   *
+   * @return NoticeInterface A new instance of the concreate class which
+   *   created the original notice.
+   */
   public function withClass (string ...$classes) : NoticeInterface;
 }
 interface NotifierInterface {
@@ -165,6 +211,12 @@ abstract class AbstractNotice implements NoticeInterface {
   public function getText () : string {
     return $this->text;
   }
+  /**
+   * Get the type of notice.
+   *
+   * @return string May be any one of the following values: "error", "info",
+   *   "success", or "warning".
+   */
   public function getType () : string {
     return $this->type;
   }

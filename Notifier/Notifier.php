@@ -19,6 +19,13 @@ namespace Please\Change\Me;
 
 interface NoticeInterface {
   /**
+   * Create a derivative notice with one or more classes added.
+   *
+   * @return NoticeInterface A new instance of the concreate class which
+   *   created the original notice.
+   */
+  public function addClass (string ...$classes) : NoticeInterface;
+  /**
    * Only display this notice to given users.
    *
    * @param \WP_User|int|string ...$userId One or more user ids.
@@ -80,13 +87,6 @@ interface NoticeInterface {
    * @return bool
    */
   public function isRenderable() : bool;
-  /**
-   * Create a derivative notices with one or more classes added.
-   *
-   * @return NoticeInterface A new instance of the concreate class which
-   *   created the original notice.
-   */
-  public function withClass (string ...$classes) : NoticeInterface;
 }
 interface NotifierInterface {
   public function hook() : NotifierInterface;
@@ -237,7 +237,7 @@ abstract class AbstractNotice implements NoticeInterface {
     }
     return false;
   }
-  public function withClass (string ...$classes) : NoticeInterface {
+  public function addClass (string ...$classes) : NoticeInterface {
     $params = array_filter(array_unique(array_values($classes)));
     if (count($params) === 0) {
       $template = 'At least one class must be passed to %1$s::%2$s().';
@@ -706,7 +706,7 @@ function themeWarning ($text, ...$values) : NoticeInterface {
  * @return NoticeInterface
  */
 function wooError ($text, ...$values) : NoticeInterface {
-  return (new Notice('error', sprintf($text, ...$values)))->withClass('woocommerce-error');
+  return (new Notice('error', sprintf($text, ...$values)))->addClass('woocommerce-error');
 }
 /**
  * WooCommerce Information Notice.
@@ -717,7 +717,7 @@ function wooError ($text, ...$values) : NoticeInterface {
  * @return NoticeInterface
  */
 function wooInfo ($text, ...$values) : NoticeInterface {
-  return (new Notice('info', sprintf($text, ...$values)))->withClass('woocommerce-info');
+  return (new Notice('info', sprintf($text, ...$values)))->addClass('woocommerce-info');
 }
 /**
  * WooCommerce Success Notice.
@@ -728,5 +728,5 @@ function wooInfo ($text, ...$values) : NoticeInterface {
  * @return NoticeInterface
  */
 function wooSuccess ($text, ...$values) : NoticeInterface {
-  return (new Notice('success', sprintf($text, ...$values)))->withClass('woocommerce-message');
+  return (new Notice('success', sprintf($text, ...$values)))->addClass('woocommerce-message');
 }

@@ -70,7 +70,7 @@ abstract class AbstractNotice implements NoticeInterface {
    * @param string $text User-facing message. Required.
    * @param string $values Zero or more values to use when $text is formatted. Optional
    *
-   * @return Notice
+   * @return NoticeInterface
    */
   public function __construct (
     string $type = 'info',

@@ -156,22 +156,22 @@ abstract class AbstractNotice implements NoticeInterface {
       'capabilities' => array_unique(array_merge($this->capabilities, $params))
     ]);
   }
-  public function getCapabilities() : array {
+  public function getCapabilities () : array {
     return $this->capabilities;
   }
-  public function getClasses() : array {
+  public function getClasses () : array {
     return $this->classes;
   }
-  public function getText() : string {
+  public function getText () : string {
     return $this->text;
   }
-  public function getType() : string {
+  public function getType () : string {
     return $this->type;
   }
-  public function getUserIds() : array {
+  public function getUserIds () : array {
     return $this->userIds;
   }
-  public function isRenderable() : bool {
+  public function isRenderable () : bool {
     if (count($this->userIds) > 0) {
       return in_array(get_current_user_id(), $this->userIds);
     }
@@ -195,7 +195,7 @@ abstract class AbstractNotice implements NoticeInterface {
       'classes' => array_unique(array_merge($this->classes, $params))
     ]);
   }
-  protected function cloneWith(array $props) : NoticeInterface {
+  protected function cloneWith (array $props) : NoticeInterface {
     return new static(...$this->getParams($props));
   }
   protected function formatArray (array $a) {
@@ -280,7 +280,7 @@ abstract class AbstractNotifier implements NotifierInterface {
     $this->queryNotices[$key] = $notice;
     return $this;
   }
-  public function redirect(string $url, string $noticeKey) : void {
+  public function redirect (string $url, string $noticeKey) : void {
     $key = $this->unique . '-' . $notice->type;
     $url = add_query_arg([$key => rawurlencode($notice->getText())], $url);
 		wp_safe_redirect($url);
@@ -316,7 +316,7 @@ abstract class AbstractNotifier implements NotifierInterface {
   private function appendNotice (NoticeInterface $notice) : void {
     $this->notices[$this->hashNotice($notice)] = $notice;
   }
-  private function hashNotice(NoticeInterface $notice) : string {
+  private function hashNotice (NoticeInterface $notice) : string {
     return md5(
       implode(' ', $notice->getClasses()) .
       $notice->getType() .
@@ -402,7 +402,7 @@ final class AdminNotice extends AbstractNotice {
    * @return bool
    * @throws \Exception
    */
-  public function isRenderable() : bool {
+  public function isRenderable () : bool {
     if (!is_admin()) {
       throw new \Exception(
         'AdminNotice::isRenderable() may only be called in the admin'

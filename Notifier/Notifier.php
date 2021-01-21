@@ -18,11 +18,12 @@ namespace Please\Change\Me;
 ###############################################################################
 
 interface NoticeInterface {
-  public function getClassList() : string;
-  public function getHash () : string;
+  public function getClasses() : array;
+  public function isRenderable() : bool;
   public function getText() : string;
   public function getType() : string;
-  public function isRenderable() : bool;
+  public function getUserIds() : array;
+
 }
 interface NotifierInterface {
   public function hook() : NotifierInterface;
@@ -167,9 +168,6 @@ abstract class AbstractNotice implements NoticeInterface {
   public function getType() : string {
     return $this->type;
   }
-  public function getHash () : string {
-    return md5($this->getClassList() . $this->getType() . $this->getText());
-  }
   public function getUserIds() : array {
     return $this->userIds;
   }
@@ -269,7 +267,7 @@ abstract class AbstractNotifier implements NotifierInterface {
     return $this->unique;
   }
   public function addNotice (NoticeInterface $notice) : NotifierInterface {
-    $this->notices[$notice->getHash()] = $notice;
+    $this->notices[$this->hashNotice($notice)] = $notice;
     return $this;
   }
   public function addQueryNotice (string $key, NoticeInterface $notice) : NotifierInterface {
@@ -316,7 +314,14 @@ abstract class AbstractNotifier implements NotifierInterface {
     return $this;
   }
   private function appendNotice (NoticeInterface $notice) : void {
-    $this->notices[$notice->getHash()] = $notice;
+    $this->notices[$this->hashNotice($notice)] = $notice;
+  }
+  private function hashNotice(NoticeInterface $notice) : string {
+    return md5(
+      implode(' ', $notice->getClassList()) .
+      $notice->getType() .
+      $notice->getText()
+    );
   }
 }
 abstract class AbstractAdminNotifier extends AbstractNotifier {

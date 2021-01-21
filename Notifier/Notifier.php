@@ -61,6 +61,41 @@ abstract class AbstractNotice implements NoticeInterface {
   protected string $type = 'info';
   protected array $userIds = [];
   protected array $capabilities = [];
+  /**
+   * Create a new notice.
+   *
+   * @param string $type The following values are recognized: 'error', 'info',
+   *   'success', and 'warning'. A type of 'info' will be used in cases where
+   *   an unrecognized type is given.
+   * @param string $text User-facing message. Required.
+   * @param string $values Zero or more values to use when $text is formatted. Optional
+   *
+   * @return Notice
+   */
+  public function __construct (
+    string $type = 'info',
+    string $text,
+    array $classes = [],
+    array $userIds = [],
+    array $capabilities = []
+  ) {
+    $allowedMarkup = [
+      'a' => ['href' => []],
+      'abbr' => [],
+      'b' => [],
+      'em' => [],
+      'i' => [],
+      'strong' => [],
+    ];
+    $cleanType = in_array($type, ['error', 'info', 'success', 'warning']) ? $type : 'info';
+    $this->capabilities = $this->formatArray($capabilities);
+    $this->classes = $this->formatArray(
+      array_merge(['notice', 'notice-' . $cleanType], array_values($classes))
+    );
+    $this->text = trim(wp_kses($text, $allowedMarkup));
+    $this->type = $cleanType;
+    $this->userIds = $this->formatArray($userIds);
+  }
   public function __set ($name, $value) {
     throw new \Exception('Mutation of a read-only instance is not permitted.');
   }
@@ -182,41 +217,6 @@ abstract class AbstractNotice implements NoticeInterface {
       is_array($userIds) ? $userIds : $this->userIds,
       is_array($capabilities) ? $capabilities : $this->capabilities
     ];
-  }
-  /**
-   * Create a new notice.
-   *
-   * @param string $type The following values are recognized: 'error', 'info',
-   *   'success', and 'warning'. A type of 'info' will be used in cases where
-   *   an unrecognized type is given.
-   * @param string $text User-facing message. Required.
-   * @param string $values Zero or more values to use when $text is formatted. Optional
-   *
-   * @return Notice
-   */
-  public function __construct (
-    string $type = 'info',
-    string $text,
-    array $classes = [],
-    array $userIds = [],
-    array $capabilities = []
-  ) {
-    $allowedMarkup = [
-      'a' => ['href' => []],
-      'abbr' => [],
-      'b' => [],
-      'em' => [],
-      'i' => [],
-      'strong' => [],
-    ];
-    $cleanType = in_array($type, ['error', 'info', 'success', 'warning']) ? $type : 'info';
-    $this->capabilities = $this->formatArray($capabilities);
-    $this->classes = $this->formatArray(
-      array_merge(['notice', 'notice-' . $cleanType], array_values($classes))
-    );
-    $this->text = trim(wp_kses($text, $allowedMarkup));
-    $this->type = $cleanType;
-    $this->userIds = $this->formatArray($userIds);
   }
 }
 abstract class AbstractNotifier implements NotifierInterface {

@@ -202,7 +202,7 @@ abstract class AbstractNotice implements NoticeInterface {
     array $capabilities = []
   ) {
     $allowedMarkup = [
-      'a' => ['href'],
+      'a' => ['href' => []],
       'abbr' => [],
       'b' => [],
       'em' => [],

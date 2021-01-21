@@ -20,9 +20,13 @@ namespace Please\Change\Me;
 interface NoticeInterface {
   public function getClasses() : array;
   public function isRenderable() : bool;
+  public function forUser (...$users) : NoticeInterface;
+  public function forUsersWhoCan (string ...$capabilities) : NoticeInterface;
+  public function getCapabilities() : array;
   public function getText() : string;
   public function getType() : string;
   public function getUserIds() : array;
+  public function withClass (string ...$classes) : NoticeInterface;
 
 }
 interface NotifierInterface {

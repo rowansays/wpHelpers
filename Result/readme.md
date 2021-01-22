@@ -1,6 +1,6 @@
 # Result
 
-Objects that implement the ResultInterface are mutable objects intended to
+Objects that implement the `ResultInterface` are mutable and are intended to
 represent the result of a specific action.
 
 ## Usage
@@ -24,7 +24,7 @@ use Please\Change\Me\AbstractResult; // Optional
 ### A Simple Example
 
 In this example we will wrap the WordPress core function `get_posts()` in a
-function that reaturns an instance of result.
+function that returns an instance of `Result`.
 
 #### Define the function
 
@@ -51,15 +51,16 @@ function getPosts (int ...$ids) : Result {
 
   // Return a passed result with a message and payload
   return $result
-    ->pass('Posts found: %d - %s', count($ids), json_encode(array_column($posts, 'ID')))->payload($posts)
+    ->pass('Posts found: %d - %s', count($ids), json_encode(array_column($posts, 'ID')))
+    ->payload($posts)
   ;
 }
 ```
 
 #### Call the function
 
-Somewhere in our extension, we can call our custom `getPosts()` function an use
-the returned result in anyone of the following ways.
+Somewhere in our extension, we can call our custom `getPosts()` function and
+use the returned result in anyone of the following ways.
 
 ```PHP
 // Run our custom function
@@ -78,20 +79,15 @@ if ($getPosts->failed()) {
 // Get the payload
 var_dump($getPosts->getPayload());
 
-// Render result as plain text
+// Render as plain text
 echo '<pre>' . $getPosts->renderText() . '</pre>';
 ```
 
-The output of `renderText()` would look similar to the following when the
-request was successful:
+#### The renderText() method
 
-```
-Querying the WordPress database for posts (passed)
-    1. Posts requested: 2 - [2164,2153]
-    2. Posts found: 2 - [2164,2153]
-```
-
-Here are a couple examples for the failure states:
+This method is useful in cases where you want to log the results of an action
+in plain text. Based on the example `getPosts()` fucntion defined above. the
+output of `renderText()` would look similar to the following:
 
 ```
 Querying the WordPress database for posts (failed)
@@ -102,4 +98,10 @@ Querying the WordPress database for posts (failed)
 Querying the WordPress database for posts (failed)
     1. Posts requested: 3 - [1,2,3]
     2. No posts were found
+```
+
+```
+Querying the WordPress database for posts (passed)
+    1. Posts requested: 2 - [2164,2153]
+    2. Posts found: 2 - [2164,2153]
 ```

@@ -1,15 +1,13 @@
 <?php
 /**
- * Plugin Name:     WpHelpers
- * Plugin URI:      PLUGIN SITE HERE
- * Description:     PLUGIN DESCRIPTION HERE
- * Author:          YOUR NAME HERE
- * Author URI:      YOUR SITE HERE
- * Text Domain:     wpHelpers
- * Domain Path:     /languages
- * Version:         0.1.0
+ * Plugin Name: WpHelpers
+ * Plugin URI: https://github.com/rowansays/wpHelpers
+ * Description: This package represents a library of functions and classes to aid in the development of WordPress themes and plugins. It is not intended to be installed. Please uninstall :)
+ * Author: Rowan Weathers
+ * Author URI: https://rowansays.com
+ * Requires at least: 5.6
+ * Requires PHP: 7.4
+ * Version: 1.0.0
  *
- * @package         WpHelpers
+ * @package RowanSays\Wp\Helpers
  */
-
-// Your code starts here.

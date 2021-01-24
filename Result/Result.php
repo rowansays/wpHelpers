@@ -1,6 +1,6 @@
 <?php
 /**
- * Result Interface
+ * Result Library
  *
  * Objects that implement the ResultInterface are mutable objects intended to
  * represent the result of a specific action.
@@ -10,6 +10,7 @@
  * @package RowanSays\Wp\Helpers
  * @author Rowan Weathers
  * @license GPL-3.0-or-later
+ * @version 1.1.0
  */
 
 declare(strict_types = 1);
@@ -211,6 +212,23 @@ abstract class AbstractResult {
         $index + 1,
         $item->renderText($level + 1)
       );
+    }
+    return $output;
+  }
+  /**
+   * Return a represention of this result in markdown
+   *
+   * @param int $level The amount that the log items should be indented when
+   *   rendered.
+   * @return string
+   */
+  public function toMarkdown (int $level = 1) : string {
+    $template = $this->state === '' ? '%s' : '%s (%s)';
+    $output = sprintf($template, $this->action, $this->state);
+    foreach($this->log as $index => $item) {
+      $indent = str_repeat(' ', $level * 2);
+      $content = $item->toMarkdown($level + 1);
+      $output .=  sprintf("\n" . '%s* %s', $indent, $content);
     }
     return $output;
   }

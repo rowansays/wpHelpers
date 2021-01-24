@@ -7,7 +7,7 @@
  * Author URI: https://rowansays.com
  * Requires at least: 5.6
  * Requires PHP: 7.4
- * Version: 1.0.0
+ * Version: 1.1.0
  *
  * @package RowanSays\Wp\Helpers
  */

@@ -154,11 +154,6 @@ abstract class AbstractResult {
    * @throws \Exception when $result is undefined.
    */
   public function merge (ResultInterface $result) : ResultInterface {
-    // Undefined results may not be merged.
-    if (!$result->passed() && !$result->failed()) {
-      throw new \Exception('Unable to merge in an instance with an undefined state.');
-    }
-
     // Inherit state from given result.
     if ($result->passed()) {
       $this->pass();

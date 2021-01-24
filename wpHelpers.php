@@ -10,4 +10,6 @@
  * Version: 1.1.0
  *
  * @package RowanSays\Wp\Helpers
+ * @author Rowan Weathers
+ * @license GPL-3.0-or-later
  */

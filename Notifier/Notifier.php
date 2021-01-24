@@ -4,6 +4,8 @@
  *
  * Easy registration and rendering of user-facing notices.
  *
+ * @see https://github.com/rowansays/wpHelpers/blob/master/Notifier/readme.md
+ *
  * @author Rowan Weathers
  * @license GPL-3.0-or-later
  * @package RowanSays\Wp\Helpers

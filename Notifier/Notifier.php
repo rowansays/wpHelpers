@@ -4,9 +4,10 @@
  *
  * Easy registration and rendering of user-facing notices.
  *
- * @package RowanSays\Wp\Helpers
  * @author Rowan Weathers
  * @license GPL-3.0-or-later
+ * @package RowanSays\Wp\Helpers
+ * @version 1.1.1
  */
 
 declare(strict_types = 1);

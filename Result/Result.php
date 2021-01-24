@@ -7,10 +7,10 @@
  *
  * @see https://github.com/rowansays/wpHelpers/blob/master/Result/readme.md
  *
- * @package RowanSays\Wp\Helpers
  * @author Rowan Weathers
  * @license GPL-3.0-or-later
- * @version 1.1.0
+ * @package RowanSays\Wp\Helpers
+ * @version 1.1.1
  */
 
 declare(strict_types = 1);

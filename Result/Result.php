@@ -10,7 +10,7 @@
  * @author Rowan Weathers
  * @license GPL-3.0-or-later
  * @package RowanSays\Wp\Helpers
- * @version 1.1.2
+ * @version 1.1.3
  */
 
 declare(strict_types = 1);
@@ -77,7 +77,7 @@ interface ResultInterface extends \Countable {
 abstract class AbstractResult {
   private string $action = 'Anonymous action';
   private $log = [];
-  private $payload;
+  protected $payload;
   private string $state = '';
   /**
    * Construct a new object that implements ResultInterface.

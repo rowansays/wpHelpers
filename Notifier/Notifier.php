@@ -9,7 +9,7 @@
  * @author Rowan Weathers
  * @license GPL-3.0-or-later
  * @package RowanSays\Wp\Helpers
- * @version 1.1.2
+ * @version 1.1.3
  */
 
 declare(strict_types = 1);

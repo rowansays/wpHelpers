@@ -10,7 +10,7 @@
  * @author Rowan Weathers
  * @license GPL-3.0-or-later
  * @package RowanSays\Wp\Helpers
- * @version 1.1.1
+ * @version 1.1.2
  */
 
 declare(strict_types = 1);
@@ -92,6 +92,14 @@ abstract class AbstractResult {
     if ($action !== '') {
       $this->action = strip_tags(sprintf($action, ...$values));
     }
+  }
+  /**
+   * Disallow the creation of new properties on an instance.
+   *
+   * @throws \Exception
+   */
+  public function __set ($name, $value) {
+    throw new \Exception('Direct property mutation is not permitted.');
   }
   /**
    * Return the number of messages in the log.

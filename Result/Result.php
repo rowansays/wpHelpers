@@ -10,7 +10,7 @@
  * @author Rowan Weathers
  * @license GPL-3.0-or-later
  * @package RowanSays\Wp\Helpers
- * @version 1.1.3
+ * @version 2.0.0
  */
 
 declare(strict_types = 1);
@@ -19,59 +19,20 @@ namespace Please\Change\Me;
 
 interface ResultInterface extends \Countable {
   /**
-   * Set the result's state to "fail" with an optional message.
-   *
-   * @param string $message A message to append to the log.
-   * @param mixed ...$values One or more values to be inserted into $message in
-   *   cases where $message contains printf() style placeholders
-   *
-   * @return ResultInterface
-   */
-  public function fail (string $message = '', ...$values) : ResultInterface;
-  /**
-   * Is the result negative?
+   * Did the result fail?
    *
    * @return bool
    */
   public function failed () : bool;
-  public function getPayload ();
   /**
-   * Append a message to the log.
-   *
-   * @param string $message A message to append to the log.
-   * @param mixed ...$values One or more values to be inserted into $message in
-   *   cases where $message contains printf() style placeholders.
-   *
-   * @return ResultInterface
-   * @throws \Exception when $message is empty.
-   */
-  public function log (string $template, ...$values) : ResultInterface;
-  /**
-   * Merge a result into the current result.
-   *
-   * @param ResultInterface $result
-   * @return ResultInterface
-   * @throws \Exception when $result is undefined.
-   */
-  public function merge (ResultInterface $result) : ResultInterface;
-  /**
-   * Set the result's state to "pass" with an optional message.
-   *
-   * @param string $message A message to append to the log.
-   * @param mixed ...$values One or more values to be inserted into $message in
-   *   cases where $message contains printf() style placeholders
-   *
-   * @return ResultInterface
-   */
-  public function pass (string $template = '', ...$values) : ResultInterface;
-  /**
-   * Is the result positive?
+   * Did the result pass?
    *
    * @return bool
    */
   public function passed () : bool;
-  public function payload () : ResultInterface;
-  public function renderText () : string;
+  public function toText () : string;
+  public function toMarkdown () : string;
+  public function toValue ();
 }
 
 abstract class AbstractResult {
@@ -88,10 +49,49 @@ abstract class AbstractResult {
    *
    * @return ResultInterface
    */
-  public function __construct (string $action = '', ...$values) {
-    if ($action !== '') {
-      $this->action = strip_tags(sprintf($action, ...$values));
+  public function __construct (
+    string $action,
+    string $state = '',
+    array $log = [],
+    $value = null
+  ) {
+    if ($action === '') {
+      throw new \InvalidArgumentException('Parameter one $action must not be empty.');
     }
+
+    $states = ['', 'undefined', 'failed', 'passed'];
+    if (!in_array($state, $states)) {
+      throw new \InvalidArgumentException(sprintf(
+        'Parameter one $action has an unrecognized value of "%s". It must be ' .
+        'one of the following values: %s.',
+        $state,
+        implode(', ', array_map(function ($s) { return '"' . $s . '"'; }, $states))
+      ));
+    }
+
+    $formattedLog = [];
+    foreach ($log as $index => $message) {
+      $formattedLog[] = $this->processLogMessage($message);
+    }
+
+    $this->action = $action;
+    $this->state = $state === 'undefined' ? '' : $state;
+    $this->log = $formattedLog;
+    $this->payload = $value;
+  }
+  protected function processLogMessage($aught) : ResultInterface {
+    if ($aught === '') {
+      throw new \InvalidArgumentException(sprintf(
+        'Log message must not be an empty string.', $index
+      ));
+    } else if (is_string($aught)) {
+      return new static($aught);
+    } else if (is_a($aught, __NAMESPACE__ . '\\ResultInterface')) {
+      return $aught;
+    }
+    throw new \InvalidArgumentException(
+      'Log message must be either an empty string or an instance of ResultInterface.',
+    );
   }
   /**
    * Disallow the creation of new properties on an instance.
@@ -113,82 +113,12 @@ abstract class AbstractResult {
     return count($this->log);
   }
   /**
-   * Set the result's state to "fail" with an optional message.
-   *
-   * @param string $message A message to append to the log.
-   * @param mixed ...$values One or more values to be inserted into $message in
-   *   cases where $message contains printf() style placeholders.
-   *
-   * @return ResultInterface
-   */
-  public function fail (string $message = '', ...$values) : ResultInterface {
-    if ($message !== '') {
-      $this->log($message, ...$values);
-    }
-    $this->state = 'failed';
-    return $this;
-  }
-  /**
    * Is the result negative?
    *
    * @return bool
    */
   public function failed () : bool {
     return $this->state === 'failed';
-  }
-  /**
-   * Append a message to the log.
-   *
-   * @param string $message A message to append to the log.
-   * @param mixed ...$values One or more values to be inserted into $message in
-   *   cases where $message contains printf() style placeholders.
-   *
-   * @return ResultInterface
-   * @throws \Exception when $message is empty.
-   */
-  public function log (string $message, ...$values) : ResultInterface {
-    $entry = strip_tags(sprintf($message, ...$values));
-    if ($entry === '') {
-      throw new \Exception('Message must not be empty');
-    }
-    $this->log[] = new static($entry);
-    return $this;
-  }
-  /**
-   * Merge a result into the current result.
-   *
-   * @param ResultInterface $result
-   * @return ResultInterface
-   * @throws \Exception when $result is undefined.
-   */
-  public function merge (ResultInterface $result) : ResultInterface {
-    // Inherit state from given result.
-    if ($result->passed()) {
-      $this->pass();
-    } else {
-      $this->fail();
-    }
-
-    // Convert given result to a log item and append to log.
-    $this->log[] = clone $result;
-
-    return $this;
-  }
-  /**
-   * Set the result's state to "pass" with an optional message.
-   *
-   * @param string $message A message to append to the log.
-   * @param mixed ...$values One or more values to be inserted into $message in
-   *   cases where $message contains printf() style placeholders
-   *
-   * @return ResultInterface
-   */
-  public function pass (string $message = '', ...$values) : ResultInterface {
-    if ($message !== '') {
-      $this->log($message, ...$values);
-    }
-    $this->state = 'passed';
-    return $this;
   }
   /**
    * Is the result positive?
@@ -205,7 +135,7 @@ abstract class AbstractResult {
    *   rendered.
    * @return string
    */
-  public function renderText (int $level = 1) : string {
+  public function toText (int $level = 1) : string {
     $template = $this->state === '' ? '%s' : '%s (%s)';
     $output = sprintf($template, $this->action, $this->state);
     foreach($this->log as $index => $item) {
@@ -213,7 +143,7 @@ abstract class AbstractResult {
       $output .=  sprintf("\n" . '%1$s%2$d. %3$s',
         $indent,
         $index + 1,
-        $item->renderText($level + 1)
+        $item->toText($level + 1)
       );
     }
     return $output;
@@ -248,17 +178,7 @@ final class Result extends AbstractResult implements ResultInterface {
    *
    * @return mixed Any value
    */
-  public function getPayload () {
+  public function toValue () {
     return $this->payload;
-  }
-  /**
-   * Define a payload value for this result.
-   *
-   * @param mixed $payload Any value
-   * @return Result
-   */
-  public function payload ($payload = null) : Result {
-    $this->payload = $payload;
-    return $this;
   }
 }

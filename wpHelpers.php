@@ -7,7 +7,7 @@
  * Author URI: https://rowansays.com
  * Requires at least: 5.6
  * Requires PHP: 7.4
- * Version: 1.1.1
+ * Version: 2.0.0
  *
  * @author Rowan Weathers
  * @license GPL-3.0-or-later

@@ -44,15 +44,16 @@ abstract class AbstractResult {
    * Construct a new object that implements ResultInterface.
    *
    * @param string $action The name of the action that this result represents.
-   * @param mixed ...$values Zero or more values to be inserted into $action in
-   *   cases where $action contains printf() style placeholders.
+   * @param string $state
+   * @param string|Result|string[]|Result[] $log
+   * @param mixed $value
    *
    * @return ResultInterface
    */
   public function __construct (
     string $action,
     string $state = '',
-    array $log = [],
+    $log = [],
     $value = null
   ) {
     if ($action === '') {
@@ -69,8 +70,19 @@ abstract class AbstractResult {
       ));
     }
 
+    // If log is a string or Result instance, wrap it in an array.
+    $logArray = is_string($log) || is_a($log, __CLASS__) ? [$log] : $log;
+
+    // Throw if $logArray is not an array.
+    if (!is_array($logArray)) {
+      throw new \InvalidArgumentException(sprintf(
+        'Parameter three $log must be either an array or a string. A value ' .
+        'with a type of "" was passed', gettype($log)
+      ));
+    }
+
     $formattedLog = [];
-    foreach ($log as $index => $message) {
+    foreach ($logArray as $index => $message) {
       $formattedLog[] = $this->processLogMessage($message);
     }
 

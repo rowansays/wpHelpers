@@ -42,6 +42,26 @@ class TestResultConstructor extends WP_UnitTestCase {
     $this->assertFalse($result->failed());
     $this->assertFalse($result->passed());
   }
+  public function test_itConstructsWithStringAsLog () {
+    $result = new Result('Testing', '', 'I am a log message');
+    $this->assertEquals(count($result), 1);
+  }
+  public function test_itConstructsWithStringArrayAsLog () {
+    $result = new Result('Testing', '', ['I am a log message']);
+    $this->assertEquals(count($result), 1);
+  }
+  public function test_itConstructsWithResultAsLog () {
+    $result = new Result('Testing', '', new Result('I am sub-action'));
+    $this->assertEquals(count($result), 1);
+  }
+  public function test_itConstructsWithResultArrayAsLog () {
+    $result = new Result('Testing', '', [new Result('I am sub-action')]);
+    $this->assertEquals(count($result), 1);
+  }
+  public function test_itConstructsWithMixedResultStringArrayAsLog () {
+    $result = new Result('Testing', '', [new Result('A'), 'B']);
+    $this->assertEquals(count($result), 2);
+  }
 }
 
 class Test_Result_toText extends WP_UnitTestCase {

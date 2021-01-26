@@ -46,6 +46,10 @@ class TestResultConstructor extends WP_UnitTestCase {
     $result = new Result('Testing', '', [new Result('I am sub-action')]);
     $this->assertEquals(count($result), 1);
   }
+  public function test_itThrowsWhenLogContainsNonResult () {
+    $this->expectException('\Exception');
+    $result = new Result('Testing', '', [new StdClass()]);
+  }
 }
 
 class Test_Result_toText extends WP_UnitTestCase {

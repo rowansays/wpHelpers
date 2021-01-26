@@ -42,25 +42,9 @@ class TestResultConstructor extends WP_UnitTestCase {
     $this->assertFalse($result->failed());
     $this->assertFalse($result->passed());
   }
-  public function test_itConstructsWithStringAsLog () {
-    $result = new Result('Testing', '', 'I am a log message');
-    $this->assertEquals(count($result), 1);
-  }
-  public function test_itConstructsWithStringArrayAsLog () {
-    $result = new Result('Testing', '', ['I am a log message']);
-    $this->assertEquals(count($result), 1);
-  }
-  public function test_itConstructsWithResultAsLog () {
-    $result = new Result('Testing', '', new Result('I am sub-action'));
-    $this->assertEquals(count($result), 1);
-  }
   public function test_itConstructsWithResultArrayAsLog () {
     $result = new Result('Testing', '', [new Result('I am sub-action')]);
     $this->assertEquals(count($result), 1);
-  }
-  public function test_itConstructsWithMixedResultStringArrayAsLog () {
-    $result = new Result('Testing', '', [new Result('A'), 'B']);
-    $this->assertEquals(count($result), 2);
   }
 }
 
@@ -87,7 +71,7 @@ class Test_Result_toText extends WP_UnitTestCase {
     $result = new Result(
       'Tell them all that the sky is falling',
       'failed',
-      ['Tell it to Henny Penny']
+      [new Result('Tell it to Henny Penny')]
     );
     $expected =
       'Tell them all that the sky is falling (failed)' . "\n" .
@@ -100,8 +84,8 @@ class Test_Result_toText extends WP_UnitTestCase {
       'Tell them all that the sky is falling',
       'failed',
       [
-        'Tell it to Henny Penny',
-        'Tell it to Ducky Lucky',
+        new Result('Tell it to Henny Penny'),
+        new Result('Tell it to Ducky Lucky'),
       ]
     );
     $expected =
@@ -116,9 +100,9 @@ class Test_Result_toText extends WP_UnitTestCase {
       'Tell them all that the sky is falling',
       'failed',
       [
-        'Tell it to Henny Penny',
-        'Tell it to Ducky Lucky',
-        'Tell it to Goosey Loosey',
+        new Result('Tell it to Henny Penny'),
+        new Result('Tell it to Ducky Lucky'),
+        new Result('Tell it to Goosey Loosey'),
       ]
     );
     $expected =
@@ -134,10 +118,10 @@ class Test_Result_toText extends WP_UnitTestCase {
       'Tell them all that the sky is falling',
       'failed',
       [
-        'Tell it to Henny Penny',
-        'Tell it to Ducky Lucky',
-        'Tell it to Goosey Loosey',
-        'Tell it to Piggy Wiggly',
+        new Result('Tell it to Henny Penny'),
+        new Result('Tell it to Ducky Lucky'),
+        new Result('Tell it to Goosey Loosey'),
+        new Result('Tell it to Piggy Wiggly'),
       ]
     );
     $expected =
@@ -158,9 +142,9 @@ class Test_Result_toText extends WP_UnitTestCase {
           'Tell it to Henny Penny',
           'passed',
           [
-            'Oh, Henny Penny!',
-            'Have you heard?',
-            'The sky is falling.',
+            new Result('Oh, Henny Penny!'),
+            new Result('Have you heard?'),
+            new Result('The sky is falling.'),
           ]
         )
       ]
@@ -199,7 +183,7 @@ class Test_Result_toMarkdown extends WP_UnitTestCase {
     $result = new Result(
       'Tell them all that the sky is falling',
       'failed',
-      ['Tell it to Henny Penny']
+      [new Result('Tell it to Henny Penny')]
     );
     $expected =
       'Tell them all that the sky is falling (failed)' . "\n" .
@@ -212,8 +196,8 @@ class Test_Result_toMarkdown extends WP_UnitTestCase {
       'Tell them all that the sky is falling',
       'failed',
       [
-        'Tell it to Henny Penny',
-        'Tell it to Ducky Lucky',
+        new Result('Tell it to Henny Penny'),
+        new Result('Tell it to Ducky Lucky'),
       ]
     );
     $expected =
@@ -228,9 +212,9 @@ class Test_Result_toMarkdown extends WP_UnitTestCase {
       'Tell them all that the sky is falling',
       'failed',
       [
-        'Tell it to Henny Penny',
-        'Tell it to Ducky Lucky',
-        'Tell it to Goosey Loosey',
+        new Result('Tell it to Henny Penny'),
+        new Result('Tell it to Ducky Lucky'),
+        new Result('Tell it to Goosey Loosey'),
       ]
     );
     $expected =
@@ -246,10 +230,10 @@ class Test_Result_toMarkdown extends WP_UnitTestCase {
       'Tell them all that the sky is falling',
       'failed',
       [
-        'Tell it to Henny Penny',
-        'Tell it to Ducky Lucky',
-        'Tell it to Goosey Loosey',
-        'Tell it to Piggy Wiggly',
+        new Result('Tell it to Henny Penny'),
+        new Result('Tell it to Ducky Lucky'),
+        new Result('Tell it to Goosey Loosey'),
+        new Result('Tell it to Piggy Wiggly'),
       ]
     );
     $expected =
@@ -270,9 +254,9 @@ class Test_Result_toMarkdown extends WP_UnitTestCase {
           'Tell it to Henny Penny',
           'passed',
           [
-            'Oh, Henny Penny!',
-            'Have you heard?',
-            'The sky is falling.',
+            new Result('Oh, Henny Penny!'),
+            new Result('Have you heard?'),
+            new Result('The sky is falling.'),
           ]
         )
       ]

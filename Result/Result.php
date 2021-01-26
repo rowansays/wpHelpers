@@ -45,7 +45,7 @@ abstract class AbstractResult {
    *
    * @param string $action The name of the action that this result represents.
    * @param string $state
-   * @param string|Result|string[]|Result[] $log
+   * @param Result[] $log
    * @param mixed $value
    *
    * @return ResultInterface
@@ -53,7 +53,7 @@ abstract class AbstractResult {
   public function __construct (
     string $action,
     string $state = '',
-    $log = [],
+    array $log = [],
     $value = null
   ) {
     if ($action === '') {
@@ -70,40 +70,21 @@ abstract class AbstractResult {
       ));
     }
 
-    // If log is a string or Result instance, wrap it in an array.
-    $logArray = is_string($log) || is_a($log, __CLASS__) ? [$log] : $log;
-
-    // Throw if $logArray is not an array.
-    if (!is_array($logArray)) {
-      throw new \InvalidArgumentException(sprintf(
-        'Parameter three $log must be either an array or a string. A value ' .
-        'with a type of "" was passed', gettype($log)
-      ));
-    }
-
-    $formattedLog = [];
-    foreach ($logArray as $index => $message) {
-      $formattedLog[] = $this->processLogMessage($message);
+    // Throw if $logArray contains a non-result.
+    foreach ($log as $aught) {
+      if (!is_a($aught, __NAMESPACE__ . '\\ResultInterface')) {
+        throw new \InvalidArgumentException(sprintf(
+          'Parameter three $log must be an array that contains only ' .
+          'instances of %1$s. A value with a type of "%2$s" was passed',
+          __CLASS__, gettype($aught)
+        ));
+      }
     }
 
     $this->action = $action;
     $this->state = $state === 'undefined' ? '' : $state;
-    $this->log = $formattedLog;
+    $this->log = $log;
     $this->payload = $value;
-  }
-  protected function processLogMessage($aught) : ResultInterface {
-    if ($aught === '') {
-      throw new \InvalidArgumentException(sprintf(
-        'Log message must not be an empty string.', $index
-      ));
-    } else if (is_string($aught)) {
-      return new static($aught);
-    } else if (is_a($aught, __NAMESPACE__ . '\\ResultInterface')) {
-      return $aught;
-    }
-    throw new \InvalidArgumentException(
-      'Log message must be either an empty string or an instance of ResultInterface.',
-    );
   }
   /**
    * Disallow the creation of new properties on an instance.
@@ -178,6 +159,8 @@ abstract class AbstractResult {
     return $output;
   }
 }
+
+
 
 /**
  * General result

@@ -72,11 +72,15 @@ abstract class AbstractResult {
 
     // Throw if $logArray contains a non-result.
     foreach ($log as $aught) {
-      if (!is_a($aught, __NAMESPACE__ . '\\ResultInterface')) {
+      $interface = __NAMESPACE__ . '\\ResultInterface';
+      if (!$aught instanceof $interface) {
+        $valueString = is_object($aught)
+          ? sprintf('An object of class "%s" was passed.', get_class($aught))
+          : sprintf('A value with a type of "%s" was passed.', gettype($aught))
+        ;
         throw new \InvalidArgumentException(sprintf(
           'Parameter three $log must be an array that contains only ' .
-          'instances of %1$s. A value with a type of "%2$s" was passed',
-          __CLASS__, gettype($aught)
+          'instances of %1$s. %2$s', $interface, $valueString
         ));
       }
     }

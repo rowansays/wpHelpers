@@ -53,8 +53,8 @@ abstract class AbstractResult {
   public function __construct (
     string $action,
     string $state = '',
-    array $log = [],
-    $value = null
+    $value = null,
+    array $log = []
   ) {
     if ($action === '') {
       throw new \InvalidArgumentException('Parameter one $action must not be empty.');
@@ -87,8 +87,8 @@ abstract class AbstractResult {
 
     $this->action = $action;
     $this->state = $state === 'undefined' ? '' : $state;
-    $this->log = $log;
     $this->payload = $value;
+    $this->log = $log;
   }
   /**
    * Disallow the creation of new properties on an instance.

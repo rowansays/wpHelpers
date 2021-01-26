@@ -43,12 +43,12 @@ class TestResultConstructor extends WP_UnitTestCase {
     $this->assertFalse($result->passed());
   }
   public function test_itConstructsWithResultArrayAsLog () {
-    $result = new Result('Testing', '', [new Result('I am sub-action')]);
+    $result = new Result('Testing', '', null, [new Result('I am sub-action')]);
     $this->assertEquals(count($result), 1);
   }
   public function test_itThrowsWhenLogContainsNonResult () {
     $this->expectException('\Exception');
-    $result = new Result('Testing', '', [new StdClass()]);
+    $result = new Result('Testing', '', null, [new StdClass()]);
   }
 }
 
@@ -72,11 +72,9 @@ class Test_Result_toText extends WP_UnitTestCase {
     );
   }
   public function test_itRendersLinearResultWithOneLogItem () {
-    $result = new Result(
-      'Tell them all that the sky is falling',
-      'failed',
-      [new Result('Tell it to Henny Penny')]
-    );
+    $result = new Result('Tell them all that the sky is falling', 'failed', null, [
+      new Result('Tell it to Henny Penny')
+    ]);
     $expected =
       'Tell them all that the sky is falling (failed)' . "\n" .
       '    1. Tell it to Henny Penny'
@@ -84,14 +82,10 @@ class Test_Result_toText extends WP_UnitTestCase {
     $this->assertEquals($result->toText(), $expected);
   }
   public function test_itRendersLinearResultWithTwoLogItems () {
-    $result = new Result(
-      'Tell them all that the sky is falling',
-      'failed',
-      [
-        new Result('Tell it to Henny Penny'),
-        new Result('Tell it to Ducky Lucky'),
-      ]
-    );
+    $result = new Result('Tell them all that the sky is falling', 'failed', null, [
+      new Result('Tell it to Henny Penny'),
+      new Result('Tell it to Ducky Lucky'),
+    ]);
     $expected =
       'Tell them all that the sky is falling (failed)' . "\n" .
       '    1. Tell it to Henny Penny' . "\n" .
@@ -100,15 +94,11 @@ class Test_Result_toText extends WP_UnitTestCase {
     $this->assertEquals($result->toText(), $expected);
   }
   public function test_itRendersLinearResultWithThreeLogItems () {
-    $result = new Result(
-      'Tell them all that the sky is falling',
-      'failed',
-      [
-        new Result('Tell it to Henny Penny'),
-        new Result('Tell it to Ducky Lucky'),
-        new Result('Tell it to Goosey Loosey'),
-      ]
-    );
+    $result = new Result('Tell them all that the sky is falling', 'failed', null, [
+      new Result('Tell it to Henny Penny'),
+      new Result('Tell it to Ducky Lucky'),
+      new Result('Tell it to Goosey Loosey'),
+    ]);
     $expected =
       'Tell them all that the sky is falling (failed)' . "\n" .
       '    1. Tell it to Henny Penny' . "\n" .
@@ -118,16 +108,12 @@ class Test_Result_toText extends WP_UnitTestCase {
     $this->assertEquals($result->toText(), $expected);
   }
   public function test_itRendersLinearResultWithFourLogItems () {
-    $result = new Result(
-      'Tell them all that the sky is falling',
-      'failed',
-      [
-        new Result('Tell it to Henny Penny'),
-        new Result('Tell it to Ducky Lucky'),
-        new Result('Tell it to Goosey Loosey'),
-        new Result('Tell it to Piggy Wiggly'),
-      ]
-    );
+    $result = new Result( 'Tell them all that the sky is falling', 'failed', null, [
+      new Result('Tell it to Henny Penny'),
+      new Result('Tell it to Ducky Lucky'),
+      new Result('Tell it to Goosey Loosey'),
+      new Result('Tell it to Piggy Wiggly'),
+    ]);
     $expected =
       'Tell them all that the sky is falling (failed)' . "\n" .
       '    1. Tell it to Henny Penny' . "\n" .
@@ -138,21 +124,13 @@ class Test_Result_toText extends WP_UnitTestCase {
     $this->assertEquals($result->toText(), $expected);
   }
   public function test_itRendersTreeResultWithDepthOfOne () {
-    $result = new Result(
-      'Tell them all that the sky is falling',
-      'failed',
-      [
-        new Result(
-          'Tell it to Henny Penny',
-          'passed',
-          [
-            new Result('Oh, Henny Penny!'),
-            new Result('Have you heard?'),
-            new Result('The sky is falling.'),
-          ]
-        )
-      ]
-    );
+    $result = new Result('Tell them all that the sky is falling', 'failed', null, [
+      new Result('Tell it to Henny Penny', 'passed', null, [
+        new Result('Oh, Henny Penny!'),
+        new Result('Have you heard?'),
+        new Result('The sky is falling.'),
+      ])
+    ]);
     $expected =
       'Tell them all that the sky is falling (failed)' . "\n" .
       '    1. Tell it to Henny Penny (passed)' . "\n" .
@@ -184,11 +162,9 @@ class Test_Result_toMarkdown extends WP_UnitTestCase {
     );
   }
   public function test_itRendersLinearResultWithOneLogItem () {
-    $result = new Result(
-      'Tell them all that the sky is falling',
-      'failed',
-      [new Result('Tell it to Henny Penny')]
-    );
+    $result = new Result('Tell them all that the sky is falling', 'failed', null, [
+      new Result('Tell it to Henny Penny')
+    ]);
     $expected =
       'Tell them all that the sky is falling (failed)' . "\n" .
       '  * Tell it to Henny Penny'
@@ -196,14 +172,10 @@ class Test_Result_toMarkdown extends WP_UnitTestCase {
     $this->assertEquals($result->toMarkdown(), $expected);
   }
   public function test_itRendersLinearResultWithTwoLogItems () {
-    $result = new Result(
-      'Tell them all that the sky is falling',
-      'failed',
-      [
-        new Result('Tell it to Henny Penny'),
-        new Result('Tell it to Ducky Lucky'),
-      ]
-    );
+    $result = new Result('Tell them all that the sky is falling', 'failed', null, [
+      new Result('Tell it to Henny Penny'),
+      new Result('Tell it to Ducky Lucky'),
+    ]);
     $expected =
       'Tell them all that the sky is falling (failed)' . "\n" .
       '  * Tell it to Henny Penny' . "\n" .
@@ -212,15 +184,11 @@ class Test_Result_toMarkdown extends WP_UnitTestCase {
     $this->assertEquals($result->toMarkdown(), $expected);
   }
   public function test_itRendersLinearResultWithThreeLogItems () {
-    $result = new Result(
-      'Tell them all that the sky is falling',
-      'failed',
-      [
-        new Result('Tell it to Henny Penny'),
-        new Result('Tell it to Ducky Lucky'),
-        new Result('Tell it to Goosey Loosey'),
-      ]
-    );
+    $result = new Result('Tell them all that the sky is falling', 'failed', null, [
+      new Result('Tell it to Henny Penny'),
+      new Result('Tell it to Ducky Lucky'),
+      new Result('Tell it to Goosey Loosey'),
+    ]);
     $expected =
       'Tell them all that the sky is falling (failed)' . "\n" .
       '  * Tell it to Henny Penny' . "\n" .
@@ -230,16 +198,12 @@ class Test_Result_toMarkdown extends WP_UnitTestCase {
     $this->assertEquals($result->toMarkdown(), $expected);
   }
   public function test_itRendersLinearResultWithFourLogItems () {
-    $result = new Result(
-      'Tell them all that the sky is falling',
-      'failed',
-      [
-        new Result('Tell it to Henny Penny'),
-        new Result('Tell it to Ducky Lucky'),
-        new Result('Tell it to Goosey Loosey'),
-        new Result('Tell it to Piggy Wiggly'),
-      ]
-    );
+    $result = new Result('Tell them all that the sky is falling', 'failed', null, [
+      new Result('Tell it to Henny Penny'),
+      new Result('Tell it to Ducky Lucky'),
+      new Result('Tell it to Goosey Loosey'),
+      new Result('Tell it to Piggy Wiggly'),
+    ]);
     $expected =
       'Tell them all that the sky is falling (failed)' . "\n" .
       '  * Tell it to Henny Penny' . "\n" .
@@ -250,19 +214,12 @@ class Test_Result_toMarkdown extends WP_UnitTestCase {
     $this->assertEquals($result->toMarkdown(), $expected);
   }
   public function test_itRendersTreeResultWithDepthOfOne () {
-    $result = new Result(
-      'Tell them all that the sky is falling',
-      'failed',
-      [
-        new Result(
-          'Tell it to Henny Penny',
-          'passed',
-          [
-            new Result('Oh, Henny Penny!'),
-            new Result('Have you heard?'),
-            new Result('The sky is falling.'),
-          ]
-        )
+    $result = new Result('Tell them all that the sky is falling', 'failed', null, [
+        new Result('Tell it to Henny Penny', 'passed', null, [
+          new Result('Oh, Henny Penny!'),
+          new Result('Have you heard?'),
+          new Result('The sky is falling.'),
+        ])
       ]
     );
     $expected =

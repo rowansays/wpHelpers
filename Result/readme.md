@@ -1,107 +1,84 @@
 # Result
 
-Objects that implement the `ResultInterface` are mutable and are intended to
-represent the result of a specific action.
+An instance created by the `Result` constructor
 
-## Usage
+  * is immutable
+  * implements the `ResultInterface`
+  * represents the result of a specific action
+  * has a state of : _passed_, _failed_, or _undefined_
+  * has a log containing zero or more sub-actions
+  * may contain a value
 
-### Setup
-
-First, you'll want to download the Result.php file and save it to your plugin
-or theme. Next you'll want to change the namespace to something unique. After
-these steps have been completed you should include the file into your extension.
+## Constructor
 
 ```PHP
-declare(strict_types = 1);
-
-require_once dirname(__DIR__) . '/plugins/wpHelpers/Result/Result.php';
-
-use Please\Change\Me\Result; // Required
-use Please\Change\Me\ResultInterface; // Optional
-use Please\Change\Me\AbstractResult; // Optional
+$result = new Result(
+  string $action,
+  string ?$state = null,
+  $value = null,
+  iterable $log = []
+);
 ```
 
-### A Simple Example
+### Parameters
 
-In this example we will wrap the WordPress core function `get_posts()` in a
-function that returns an instance of `Result`.
+  1. __Action__ `(string)` Required. Must be a non-empty string. The action
+     should be written in the present tense and describe the action represented
+     by the result.
+  2. __State__ `(string|null)` Optional. Use this parameter to communicate if
+     the action was successful or not. May be one of
+     three values: `'passed'`, `'failed'`, or `null`. Defaults to `null`.
+  3. __Value__ `(mixed)` Optional. Use this parameter to save a value. Any value
+     is accepted. Defaults to `null`.
+  4. __Log__ `(iterable<ResultInterface>)` Optional. An iterable value
+     containing zero or more objects that implement `ResultInterface`. Defaults
+     to an empty array.
 
-#### Define the function
+### Properties
+
+Instances of `Result` have no public properties.
+
+### Methods
+
+  1. __failed()__ : `(bool)` Was the result successful?
+  2. __passed()__ : `(bool)` Was the result unsuccessful?
+  3. __toMarkdown()__ : `(string)` Render a representation of the result in
+     markdown. This consists of one line contained the _action_ and the _state_.
+     Log entries will be rendered as an unordered list immediately following the action/state line. This method recursively renders all contained results.
+  4. __toValue()__ : `(mixed)` Return the value passed as parameter three
+     `$value`.
+
+### Tutorials
+
+  1. [Get Posts](./TutorialGetPosts.ms)
+
+
+### Calling the function
+
+Somewhere in our theme or plugin, we can call our custom `getPosts()` function
+and use the returned result in one or more of the following ways.
 
 ```PHP
-function getPosts (int ...$ids) : Result {
-  // Create an instance of result
-  $result = new Result('Querying the WordPress database for posts');
-
-  // Return a failed result if no ids are present
-  if (count($ids) < 1) {
-    return $result->fail('No posts were requested by id');
-  }
-
-  // Log a message when one or more ids are present
-  $result->log('Posts requested: %d - %s', count($ids), json_encode($ids));
-
-  // Query for posts
-  $posts = get_posts(['numberposts' => 999999, 'include' => $ids]);
-
-  // Return a failed result early with message
-  if (count($posts) < 1) {
-    return $result->fail('No posts were found');
-  }
-
-  // Return a passed result with a message and payload
-  return $result
-    ->pass('Posts found: %d - %s', count($ids), json_encode(array_column($posts, 'ID')))
-    ->payload($posts)
-  ;
-}
+$getPosts = getPostsById(2164, 2153, 2136, 2076, 2033, 358, 555);
 ```
 
-#### Call the function
-
-Somewhere in our extension, we can call our custom `getPosts()` function and
-use the returned result in anyone of the following ways.
+### Determine if the result was successful
 
 ```PHP
-// Run our custom function
-$getPosts = getPosts(2164, 2153);
-
-// Do something if successful
 if ($getPosts->passed()) {
-  // Something
+  // Do something
 }
+```
 
-// Do something if failed
+### Determine if the result was unsuccessful
+
+```PHP
 if ($getPosts->failed()) {
-  // Something
+  // Do something
 }
-
-// Get the payload
-var_dump($getPosts->getPayload());
-
-// Render as plain text
-echo '<pre>' . $getPosts->renderText() . '</pre>';
 ```
 
-#### The renderText() method
-
-This method is useful in cases where you want to log the results of an action
-in plain text. Based on the example `getPosts()` fucntion defined above. the
-output of `renderText()` would look similar to the following:
-
-```
-Querying the WordPress database for posts (failed)
-    1. No posts were requested by id
-```
-
-```
-Querying the WordPress database for posts (failed)
-    1. Posts requested: 3 - [1,2,3]
-    2. No posts were found
-```
-
-```
-Querying the WordPress database for posts (passed)
-    1. Posts requested: 2 - [2164,2153]
-    2. Posts found: 2 - [2164,2153]
+### Assign the value to a variable
+```PHP
+$posts = $getPosts->toValue();
 ```

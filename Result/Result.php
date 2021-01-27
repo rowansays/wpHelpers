@@ -45,8 +45,8 @@ abstract class AbstractResult {
    *
    * @param string $action The name of the action that this result represents.
    * @param string $state
-   * @param Result[] $log
    * @param mixed $value
+   * @param iterable<Result> $log
    *
    * @return ResultInterface
    */

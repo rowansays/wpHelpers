@@ -50,35 +50,4 @@ Instances of `Result` have no public properties.
 
 ### Tutorials
 
-  1. [Get Posts](./TutorialGetPosts.ms)
-
-
-### Calling the function
-
-Somewhere in our theme or plugin, we can call our custom `getPosts()` function
-and use the returned result in one or more of the following ways.
-
-```PHP
-$getPosts = getPostsById(2164, 2153, 2136, 2076, 2033, 358, 555);
-```
-
-### Determine if the result was successful
-
-```PHP
-if ($getPosts->passed()) {
-  // Do something
-}
-```
-
-### Determine if the result was unsuccessful
-
-```PHP
-if ($getPosts->failed()) {
-  // Do something
-}
-```
-
-### Assign the value to a variable
-```PHP
-$posts = $getPosts->toValue();
-```
+  1. [Get Posts](./TutorialGetPosts.md)

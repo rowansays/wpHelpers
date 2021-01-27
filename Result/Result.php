@@ -37,7 +37,7 @@ interface ResultInterface extends \Countable {
 abstract class AbstractResult {
   private string $action = 'Anonymous action';
   private $log = [];
-  protected $payload;
+  protected $value;
   private string $state = '';
   /**
    * Construct a new object that implements ResultInterface.
@@ -86,7 +86,7 @@ abstract class AbstractResult {
 
     $this->action = $action;
     $this->state = $state === null ? 'undefined' : $state;
-    $this->payload = $value;
+    $this->value = $value;
     $this->log = $log;
   }
   /**
@@ -148,15 +148,15 @@ abstract class AbstractResult {
 /**
  * General result
  *
- * The payload may be any value.
+ * The value may be any value.
  */
 final class Result extends AbstractResult implements ResultInterface {
   /**
-   * Get the payload value for this result.
+   * Get the value value for this result.
    *
    * @return mixed Any value
    */
   public function toValue () {
-    return $this->payload;
+    return $this->value;
   }
 }

@@ -54,7 +54,7 @@ abstract class AbstractResult {
     string $action,
     string $state = '',
     $value = null,
-    array $log = []
+    iterable $log = []
   ) {
     if ($action === '') {
       throw new \InvalidArgumentException('Parameter one $action must not be empty.');
@@ -70,7 +70,7 @@ abstract class AbstractResult {
       ));
     }
 
-    // Throw if $logArray contains a non-result.
+    // Throw if $log contains a non-result.
     foreach ($log as $aught) {
       $interface = __NAMESPACE__ . '\\ResultInterface';
       if (!$aught instanceof $interface) {

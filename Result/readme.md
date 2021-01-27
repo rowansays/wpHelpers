@@ -9,15 +9,26 @@ An instance created by the `Result` constructor
   * has a log containing zero or more sub-actions
   * may contain a value
 
-## Constructor
+## Constructor Signatures
 
+### Signature 1
 ```PHP
-$result = new Result(
-  string $action,
-  string ?$state = null,
-  $value = null,
-  iterable $log = []
-);
+Result(string $action);
+```
+
+### Signature 2
+```PHP
+Result(string $action, string ?$state = null);
+```
+
+### Signature 3
+```PHP
+Result(string $action, string ?$state = null, $value = null);
+```
+
+### Signature 4
+```PHP
+Result(string $action, string ?$state = null, $value = null, iterable $log = []);
 ```
 
 ### Parameters

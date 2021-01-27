@@ -30,7 +30,6 @@ interface ResultInterface extends \Countable {
    * @return bool
    */
   public function passed () : bool;
-  public function toText () : string;
   public function toMarkdown () : string;
   public function toValue ();
 }
@@ -124,26 +123,6 @@ abstract class AbstractResult {
    */
   public function passed () : bool {
     return $this->state === 'passed';
-  }
-  /**
-   * Return a plain-text represention of this result
-   *
-   * @param int $level The amount that the log items should be indented when
-   *   rendered.
-   * @return string
-   */
-  public function toText (int $level = 1) : string {
-    $template = $this->state === 'undefined' ? '%s' : '%s (%s)';
-    $output = sprintf($template, $this->action, $this->state);
-    foreach($this->log as $index => $item) {
-      $indent = str_repeat(' ', $level * 4);
-      $output .=  sprintf("\n" . '%1$s%2$d. %3$s',
-        $indent,
-        $index + 1,
-        $item->toText($level + 1)
-      );
-    }
-    return $output;
   }
   /**
    * Return a represention of this result in markdown

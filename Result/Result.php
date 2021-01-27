@@ -52,7 +52,7 @@ abstract class AbstractResult {
    */
   public function __construct (
     string $action,
-    string $state = '',
+    ?string $state = null,
     $value = null,
     iterable $log = []
   ) {
@@ -60,7 +60,7 @@ abstract class AbstractResult {
       throw new \InvalidArgumentException('Parameter one $action must not be empty.');
     }
 
-    $states = ['', 'undefined', 'failed', 'passed'];
+    $states = [null, 'failed', 'passed'];
     if (!in_array($state, $states)) {
       throw new \InvalidArgumentException(sprintf(
         'Parameter one $action has an unrecognized value of "%s". It must be ' .
@@ -86,7 +86,7 @@ abstract class AbstractResult {
     }
 
     $this->action = $action;
-    $this->state = $state === 'undefined' ? '' : $state;
+    $this->state = $state === null ? 'undefined' : $state;
     $this->payload = $value;
     $this->log = $log;
   }
@@ -133,7 +133,7 @@ abstract class AbstractResult {
    * @return string
    */
   public function toText (int $level = 1) : string {
-    $template = $this->state === '' ? '%s' : '%s (%s)';
+    $template = $this->state === 'undefined' ? '%s' : '%s (%s)';
     $output = sprintf($template, $this->action, $this->state);
     foreach($this->log as $index => $item) {
       $indent = str_repeat(' ', $level * 4);
@@ -153,7 +153,7 @@ abstract class AbstractResult {
    * @return string
    */
   public function toMarkdown (int $level = 1) : string {
-    $template = $this->state === '' ? '%s' : '%s (%s)';
+    $template = $this->state === 'undefined' ? '%s' : '%s (%s)';
     $output = sprintf($template, $this->action, $this->state);
     foreach($this->log as $index => $item) {
       $indent = str_repeat(' ', $level * 2);

@@ -42,6 +42,11 @@ class TestResultConstructor extends WP_UnitTestCase {
     $this->assertFalse($result->failed());
     $this->assertFalse($result->passed());
   }
+  public function test_itConstructsWithNullAsParameterTwo () {
+    $result = new Result('Testing', null);
+    $this->assertFalse($result->failed());
+    $this->assertFalse($result->passed());
+  }
   public function test_itConstructsWithResultArrayAsLog () {
     $result = new Result('Testing', '', null, [new Result('I am sub-action')]);
     $this->assertEquals(count($result), 1);

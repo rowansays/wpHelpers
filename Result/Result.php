@@ -12,7 +12,6 @@ declare(strict_types = 1);
  *
  * @author Rowan Weathers
  * @license GPL-3.0-or-later
- * @package RowanSays\Wp\Helpers
  * @version 2.0.0
  */
 

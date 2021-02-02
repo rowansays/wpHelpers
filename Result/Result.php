@@ -16,8 +16,8 @@ declare(strict_types = 1);
  * @version 2.0.0
  */
 
+namespace RowanSaysWpHelpers\Result;
 
-namespace Please\Change\Me;
 
 interface ResultInterface extends \Countable {
   /**

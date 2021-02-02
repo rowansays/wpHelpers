@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Result Library
  *
@@ -13,7 +16,6 @@
  * @version 2.0.0
  */
 
-declare(strict_types = 1);
 
 namespace Please\Change\Me;
 

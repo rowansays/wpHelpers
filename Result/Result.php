@@ -158,3 +158,41 @@ abstract class AbstractResult {
  * The value may be any value.
  */
 final class Result extends AbstractResult implements ResultInterface {}
+
+/**
+ * Convert a WP_Error instance to a result.
+ *
+ * It's important to note that {@link https://developer.wordpress.org/reference/classes/wp_error/ WP_Error}
+ * uses an array indexed by string to store errors. This means that the order in
+ * which the errors happened may not be perserved.
+ */
+final class ResultFromWpError extends AbstractResult implements ResultInterface {
+  /**
+   * Construct a new result from an instance of WP_Error.
+   *
+   * @param string $action (Required) The name of the action that this result
+   *   represents.
+   * @param \WP_Error $error (Optional) The instance of `WP_Error` to convert to
+   *   a `Result` instance.
+   * @param mixed $value (Optional) Any value
+   */
+  public function __construct (string $action, ?\WP_Error $error = null, $value = null) {
+    if ($action === '') {
+      throw new \InvalidArgumentException('Parameter one $action must not be empty.');
+    }
+
+    $log = [];
+    if ($error !== null) {
+      foreach ($error->errors as $code => $messages) {
+        foreach ($messages as $message ) {
+          $log[] = new static(sprintf('%s - %s', $code, $message));
+        }
+      }
+    }
+
+    $this->action = $action;
+    $this->state = $error === null ? 'undefined' : 'failed';
+    $this->value = $value;
+    $this->log = $log;
+  }
+}

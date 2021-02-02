@@ -36,10 +36,10 @@ interface ResultInterface extends \Countable {
 }
 
 abstract class AbstractResult {
-  private string $action = 'Anonymous action';
-  private $log = [];
+  protected string $action = 'Anonymous action';
+  protected $log = [];
   protected $value;
-  private string $state = '';
+  protected string $state = '';
   /**
    * Construct a new object that implements ResultInterface.
    *

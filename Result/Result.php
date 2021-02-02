@@ -17,8 +17,7 @@ declare(strict_types = 1);
 
 namespace RowanSaysWpHelpers\Result;
 
-
-interface ResultInterface extends \Countable {
+interface ResultInterface extends \Countable, \IteratorAggregate {
   /**
    * Did the result fail?
    *
@@ -108,6 +107,19 @@ abstract class AbstractResult {
    */
   public function count () : int {
     return count($this->log);
+  }
+  /**
+   * Retrieve an external iterator.
+   *
+   * This method single-handedly fulfills the requirements of PHP's built-in
+   * IteratorAggregate interface which allows instances of TextList to
+   * be used and recognized as iterables.
+   *
+   * @see https://www.php.net/manual/en/iteratoraggregate.getiterator.php
+   * @return ArrayIterator
+   */
+  public function getIterator() : \ArrayIterator {
+    return new \ArrayIterator($this->log);
   }
   /**
    * Get the value of this result.

@@ -34,6 +34,9 @@ class TestResultConstructor extends WP_UnitTestCase {
   public function test_itCountable () {
     $this->assertInstanceOf('\Countable', new Result('Testing'));
   }
+  public function test_itIterable () {
+    $this->assertTrue(is_iterable(new Result('Testing')));
+  }
   public function test_itIsResultInterface () {
     $this->assertInstanceOf('Please\Change\Me\ResultInterface', new Result('Testing'));
   }

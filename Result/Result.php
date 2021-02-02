@@ -110,6 +110,14 @@ abstract class AbstractResult {
     return count($this->log);
   }
   /**
+   * Get the value of this result.
+   *
+   * @return mixed Any value
+   */
+  public function toValue () {
+    return $this->value;
+  }
+  /**
    * Is the result negative?
    *
    * @return bool
@@ -144,20 +152,9 @@ abstract class AbstractResult {
   }
 }
 
-
-
 /**
  * General result
  *
  * The value may be any value.
  */
-final class Result extends AbstractResult implements ResultInterface {
-  /**
-   * Get the value value for this result.
-   *
-   * @return mixed Any value
-   */
-  public function toValue () {
-    return $this->value;
-  }
-}
+final class Result extends AbstractResult implements ResultInterface {}

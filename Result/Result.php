@@ -231,7 +231,16 @@ final class ResultFromWpError extends AbstractResult implements ResultInterface 
     $this->log = $log;
   }
 }
-
+/**
+ * Create a result that contains contains only information.
+ *
+ * The `InfoResult` constructor is an abbreviated form of
+ * `Result::__construct()`. It provides only parameters for `$action` and
+ * `$log`. It should be understood that instances of this class will always
+ * have `null` values and thier state will always be undefined.
+ *
+ * @since v3.0.0
+ */
 final class InfoResult extends AbstractResult implements ResultInterface {
   public function __construct (string $action, iterable $log = []) {
     if ($action === '') {

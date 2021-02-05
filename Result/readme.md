@@ -9,6 +9,25 @@ An instance created by the `Result` constructor
   * has a log containing zero or more sub-actions
   * may contain a value
 
+## Class synopsis
+
+```PHP
+final class Result extends AbstractResult implements ResultInterface {
+  // Properties inherited from AbstractResult
+  private string $action = 'Anonymous action';
+  private $log = [];
+  protected $value;
+  private string $state = '';
+
+  // Methods inherited from AbstractResult
+  public function failed () : bool;
+  public function passed () : bool;
+  public function toMarkdown () : string;
+
+  // Methods
+  public function toValue ();
+```
+
 ## Constructor Signatures
 
 ### Signature 1

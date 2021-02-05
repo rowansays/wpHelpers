@@ -1,3 +1,5 @@
 .DS_Store
 .phpdoc/
 docs/
+build/
+ast.dump

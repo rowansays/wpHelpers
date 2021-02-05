@@ -313,7 +313,7 @@ final class ResultString extends AbstractResult implements ResultInterface {
     parent::__construct($action, $state, $value, $log);
   }
   /**
-   * @return array
+   * @return string
    */
   public function toValue () : string {
     return $this->value;

@@ -69,30 +69,8 @@ abstract class AbstractResult {
       throw new \InvalidArgumentException('Parameter one $action must not be empty.');
     }
 
-    $states = [null, 'failed', 'passed'];
-    if (!in_array($state, $states)) {
-      throw new \InvalidArgumentException(sprintf(
-        'Parameter one $action has an unrecognized value of "%s". It must be ' .
-        'one of the following values: %s.',
-        $state,
-        implode(', ', array_map(function ($s) { return '"' . $s . '"'; }, $states))
-      ));
-    }
-
-    // Throw if $log contains a non-result.
-    foreach ($log as $aught) {
-      $interface = __NAMESPACE__ . '\\ResultInterface';
-      if (!$aught instanceof $interface) {
-        $valueString = is_object($aught)
-          ? sprintf('An object of class "%s" was passed.', get_class($aught))
-          : sprintf('A value with a type of "%s" was passed.', gettype($aught))
-        ;
-        throw new \InvalidArgumentException(sprintf(
-          'Parameter three $log must be an array that contains only ' .
-          'instances of %1$s. %2$s', $interface, $valueString
-        ));
-      }
-    }
+    $this->validateState($state);
+    $this->validateLogParameter($log, 'four');
 
     $this->action = $action;
     $this->state = $state === null ? 'undefined' : $state;
@@ -171,6 +149,42 @@ abstract class AbstractResult {
       $output .=  sprintf("\n" . '%s* %s', $indent, $content);
     }
     return $output;
+  }
+  /**
+   * Ensure that all entries in a log array are allowed.
+   *
+   * @throws \InvalidArgumentException
+   */
+  protected function validateLogParameter (array $values, string $position) : void {
+    foreach ($values as $aught) {
+      $interface = __NAMESPACE__ . '\\ResultInterface';
+      if (!$aught instanceof $interface) {
+        $valueString = is_object($aught)
+          ? sprintf('An object of class "%s" was passed.', get_class($aught))
+          : sprintf('A value with a type of "%s" was passed.', gettype($aught))
+        ;
+        throw new \InvalidArgumentException(sprintf(
+          'Parameter %1$s `$log` must be an array that contains only ' .
+          'instances of %2$s. %3$s', $position, $interface, $valueString
+        ));
+      }
+    }
+  }
+  /**
+   * Ensure that a given state value is valid.
+   *
+   * @throws \InvalidArgumentException
+   */
+  protected function validateState ($aught) : void {
+    $states = [null, 'failed', 'passed'];
+    if (!in_array($aught, $states, true)) {
+      throw new \InvalidArgumentException(sprintf(
+        'Parameter two `$state` has an unrecognized value of "%s". It must ' .
+        'be one of the following values: %s.',
+        $aught,
+        implode(', ', array_map(function ($s) { return '"' . $s . '"'; }, $states))
+      ));
+    }
   }
 }
 

@@ -4,7 +4,6 @@
  *
  * @author Rowan Weathers
  * @license GPL-3.0-or-later
- * @version 2.0.0
  */
 
 namespace RowanSaysWpHelpers\Result\Test;

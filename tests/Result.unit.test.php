@@ -49,12 +49,12 @@ class TestResultConstructor extends WP_UnitTestCase {
     $this->assertFalse($result->passed());
   }
   public function test_itConstructsWithResultArrayAsLog () {
-    $result = new Result('Testing', '', null, [new Result('I am sub-action')]);
+    $result = new Result('Testing', null, null, [new Result('I am sub-action')]);
     $this->assertEquals(count($result), 1);
   }
   public function test_itThrowsWhenLogContainsNonResult () {
     $this->expectException('\Exception');
-    $result = new Result('Testing', '', null, [new \StdClass()]);
+    $result = new Result('Testing', null, null, [new \StdClass()]);
   }
 }
 class Test_Result_toMarkdown extends WP_UnitTestCase {

@@ -290,3 +290,32 @@ final class ArrayResult extends AbstractResult implements ResultInterface {
     return $this->value;
   }
 }
+/**
+ * Create a result that contains a string as its value.
+ *
+ * Instances of the `ResultString` class function similarly to those of the
+ * `Result` class with one exception: their values are always strings.
+ *
+ * @since v3.0.0
+ */
+final class ResultString extends AbstractResult implements ResultInterface {
+  /**
+   * Create a new instance
+   *
+   * @throws \TypeError when parameters are of an unrecognized type
+   */
+  public function __construct (
+    string $action,
+    ?string $state,
+    string $value,
+    iterable $log = []
+  ) {
+    parent::__construct($action, $state, $value, $log);
+  }
+  /**
+   * @return array
+   */
+  public function toValue () : string {
+    return $this->value;
+  }
+}

@@ -17,6 +17,9 @@ declare(strict_types = 1);
 
 namespace RowanSaysWpHelpers\Result;
 
+/**
+ * Defines signatures for all public methods of objects that behave as results.
+ */
 interface ResultInterface extends \Countable, \IteratorAggregate {
   /**
    * Did the result fail?
@@ -34,6 +37,13 @@ interface ResultInterface extends \Countable, \IteratorAggregate {
   public function toValue ();
 }
 
+/**
+ * An abstract class which  can be used to quickly craft a final concrete class
+ * that implements ResultInterface.
+ *
+ * This abstract class implements all of the functionality required by
+ * `ResultInterface` except for the {@see ResultInterface::toValue()} method.
+ */
 abstract class AbstractResult {
   protected string $action = 'Anonymous action';
   protected $log = [];
@@ -152,7 +162,7 @@ abstract class AbstractResult {
    *   rendered.
    * @return string
    */
-  public function toMarkdown (int $level = 1) : string {
+  public function toMarkdown (int $level = 1, array $options = []) : string {
     $template = $this->state === 'undefined' ? '%s' : '%s (%s)';
     $output = sprintf($template, $this->action, $this->state);
     foreach($this->log as $index => $item) {

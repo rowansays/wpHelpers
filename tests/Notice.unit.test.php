@@ -1,22 +1,23 @@
 <?php
 /**
- * Class SampleTest
- *
- * @package WpHelpers
+ * Notice tests
  */
+
+namespace RowanSaysWpHelpers\Notifier\Test;
 
 require_once dirname(__DIR__) . '/Notifier/Notifier.php';
 
-use Please\Change\Me\Notice;
+use RowanSaysWpHelpers\Notifier\Notice;
+use WP_UnitTestCase;
 
 class NoticeConstructor extends WP_UnitTestCase {
 	/** @test */
 	public function itIsClass () {
-		$this->assertTrue(class_exists('\Please\Change\Me\Notice'));
+		$this->assertTrue(class_exists('\RowanSaysWpHelpers\Notifier\Notice'));
   }
   /** @test */
 	public function itIsFinal () {
-    $this->assertTrue((new \ReflectionClass('Please\Change\Me\Notice'))->isFinal());
+    $this->assertTrue((new \ReflectionClass('RowanSaysWpHelpers\Notifier\Notice'))->isFinal());
   }
   /** @test */
 	public function itConstructsEmptyInstances () {
@@ -52,7 +53,6 @@ class NoticeConstructor extends WP_UnitTestCase {
     $this->assertEquals($notice->getType(), 'success');
 	}
 }
-
 class NoticeConstructorExceptionalBehavior extends WP_UnitTestCase {
   /** @test */
 	public function itThrowsExceptionWhenTextPropIsSet () {

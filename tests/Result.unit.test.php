@@ -4,20 +4,21 @@
  *
  * @author Rowan Weathers
  * @license GPL-3.0-or-later
- * @package RowanSays\Wp\Helpers
  * @version 2.0.0
  */
 
-require_once dirname(__DIR__) . '/Result/Result.php';
+namespace RowanSaysWpHelpers\Result\Test;
+use RowanSaysWpHelpers\Result\Result;
+use WP_UnitTestCase;
 
-use Please\Change\Me\Result;
+require_once dirname(__DIR__) . '/Result/Result.php';
 
 class TestResultConstructor extends WP_UnitTestCase {
 	public function test_itIsClass () {
-		$this->assertTrue(class_exists('\Please\Change\Me\Result'));
+		$this->assertTrue(class_exists('RowanSaysWpHelpers\Result\Result'));
   }
 	public function test_itIsFinal () {
-    $this->assertTrue((new \ReflectionClass('Please\Change\Me\Result'))->isFinal());
+    $this->assertTrue((new \ReflectionClass('RowanSaysWpHelpers\Result\Result'))->isFinal());
   }
   public function test_itThrowsWhenParameterOneIsNull () {
     $this->expectException('\ArgumentCountError');
@@ -38,7 +39,7 @@ class TestResultConstructor extends WP_UnitTestCase {
     $this->assertTrue(is_iterable(new Result('Testing')));
   }
   public function test_itIsResultInterface () {
-    $this->assertInstanceOf('Please\Change\Me\ResultInterface', new Result('Testing'));
+    $this->assertInstanceOf('RowanSaysWpHelpers\Result\ResultInterface', new Result('Testing'));
   }
   public function test_itConstructsWithUndefinedState () {
     $result = new Result('Testing');
@@ -56,10 +57,9 @@ class TestResultConstructor extends WP_UnitTestCase {
   }
   public function test_itThrowsWhenLogContainsNonResult () {
     $this->expectException('\Exception');
-    $result = new Result('Testing', '', null, [new StdClass()]);
+    $result = new Result('Testing', '', null, [new \StdClass()]);
   }
 }
-
 class Test_Result_toMarkdown extends WP_UnitTestCase {
   public function test_itIsCallable () {
     $result = new Result('Testing');

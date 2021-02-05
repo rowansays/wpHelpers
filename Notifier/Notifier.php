@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Notifier.
+ * Notifier Library.
  *
  * Easy registration and rendering of user-facing notices.
  *
@@ -8,18 +8,20 @@
  *
  * @author Rowan Weathers
  * @license GPL-3.0-or-later
- * @package RowanSays\Wp\Helpers
  * @version 2.0.0
  */
 
 declare(strict_types = 1);
 
-namespace Please\Change\Me;
+namespace RowanSaysWpHelpers\Notifier;
 
 ###############################################################################
 # Interfaces                                                                  #
 ###############################################################################
 
+/**
+ * Defines signatures for all public methods of objects that behave as notices.
+ */
 interface NoticeInterface {
   /**
    * Create a derivative notice with one or more classes added.
@@ -122,7 +124,7 @@ interface NotifierInterface {
 # Abstracts                                                                   #
 ###############################################################################
 
-abstract class AbstractNotice implements NoticeInterface {
+abstract class AbstractNotice {
   protected array $classes = ['notice'];
   protected string $text = '';
   protected string $type = 'info';
@@ -131,11 +133,13 @@ abstract class AbstractNotice implements NoticeInterface {
   /**
    * Create a new notice.
    *
-   * @param string $type The following values are recognized: 'error', 'info',
+   * @param string $type (optional) The following values are recognized: 'error', 'info',
    *   'success', and 'warning'. A type of 'info' will be used in cases where
    *   an unrecognized type is given.
-   * @param string $text User-facing message. Required.
-   * @param string $values Zero or more values to use when $text is formatted. Optional
+   * @param string $text (optional) User-facing message.
+   * @param string[] $classes (optional)
+   * @param int[] $userIds (optional)
+   * @param string[] $classes (optional)
    *
    * @return NoticeInterface
    */
@@ -272,7 +276,7 @@ abstract class AbstractNotice implements NoticeInterface {
     ];
   }
 }
-abstract class AbstractNotifier implements NotifierInterface {
+abstract class AbstractNotifier {
   /**
    * Unique.
    *
@@ -413,9 +417,9 @@ abstract class AbstractAdminNotifier extends AbstractNotifier {
 # Notices                                                                     #
 ###############################################################################
 
-final class Notice extends AbstractNotice {
+final class Notice extends AbstractNotice implements NoticeInterface {
 }
-final class AdminNotice extends AbstractNotice {
+final class AdminNotice extends AbstractNotice implements NoticeInterface {
   private array $hideOn = [];
   private array $showOn = [];
   /**
@@ -518,7 +522,7 @@ final class AdminNotice extends AbstractNotice {
 # Notifiers                                                                   #
 ###############################################################################
 
-final class AdminNotifier extends AbstractAdminNotifier {
+final class AdminNotifier extends AbstractAdminNotifier implements NotifierInterface {
   /**
 	 * Hook into WordPress.
    *
@@ -534,7 +538,7 @@ final class AdminNotifier extends AbstractAdminNotifier {
     return $this;
   }
 }
-final class NetworkNotifier extends AbstractAdminNotifier {
+final class NetworkNotifier extends AbstractAdminNotifier implements NotifierInterface {
   /**
 	 * Hook into WordPress.
    *
@@ -550,7 +554,7 @@ final class NetworkNotifier extends AbstractAdminNotifier {
     return $this;
   }
 }
-final class ThemeNotifier extends AbstractNotifier {
+final class ThemeNotifier extends AbstractNotifier implements NotifierInterface {
   public function hook () : ThemeNotifier {
     add_action('wp_footer', function () {
       $template = '

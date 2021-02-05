@@ -1,7 +1,9 @@
-## Example 1
+# Get Posts Tutorial
 
-In this example we will wrap the WordPress core function `get_posts()` in a
+In this tutorial we will wrap the WordPress core function `get_posts()` in a
 function that returns an instance of `Result`.
+
+## 1: Basic Function Definition
 
 ```PHP
 function getPostsById () : Result {
@@ -33,7 +35,7 @@ The mardown would look like this:
 Querying WordPress for posts
 ```
 
-## Example 2: Add Parameters
+## 2: Add Parameters
 
 ```PHP
 function getPostsById (int ...$ids) : Result {
@@ -54,7 +56,7 @@ We can now check number one off our list:
   3. return any posts returned by `get_posts()`
   4. posses a more informative log
 
-## Example 3: Determine State
+## 3: Determine State
 
 ```PHP
 function getPostsById (int ...$ids) : Result {
@@ -90,7 +92,7 @@ We can now check number two off our list:
   3. return any posts returned by `get_posts()`
   4. posses a more informative log
 
-## Example 3: Return a value
+## 4: Return a Value
 
 ```PHP
 function getPostsById (int ...$ids) : Result {
@@ -115,7 +117,7 @@ which means we can cross number 3 off our list:
   3. ~~return any posts returned by `get_posts()`~~
   4. posses a more informative log
 
-## Example 3: Enhance Log
+## 5: Enhance Log
 
 ```PHP
 function getPostsById (int ...$ids) : Result {

@@ -12,12 +12,15 @@ declare(strict_types = 1);
  *
  * @author Rowan Weathers
  * @license GPL-3.0-or-later
- * @version 2.0.0
+ * @version 3.0.0
  */
 
 namespace RowanSaysWpHelpers\Result;
+
 /**
  * Defines signatures for all public methods of objects that behave as results.
+ *
+ * @since v1.1.0
  */
 interface ResultInterface extends \Countable, \IteratorAggregate {
   /**
@@ -35,13 +38,14 @@ interface ResultInterface extends \Countable, \IteratorAggregate {
   public function toMarkdown () : string;
   public function toValue ();
 }
-
 /**
  * An abstract class which  can be used to quickly craft a final concrete class
  * that implements ResultInterface.
  *
  * This abstract class implements all of the functionality required by
  * `ResultInterface` except for the {@see ResultInterface::toValue()} method.
+ *
+ * @since v1.1.0
  */
 abstract class AbstractResult {
   protected string $action = 'Anonymous action';
@@ -186,20 +190,22 @@ abstract class AbstractResult {
     }
   }
 }
-
 /**
  * General result
  *
  * The value may be any value.
+ *
+ * @since v1.1.0
  */
 final class Result extends AbstractResult implements ResultInterface {}
-
 /**
  * Convert a WP_Error instance to a result.
  *
  * It's important to note that {@link https://developer.wordpress.org/reference/classes/wp_error/ WP_Error}
  * uses an array indexed by string to store errors. This means that the order in
  * which the errors happened may not be perserved.
+ *
+ * @since v3.0.0
  */
 final class ResultFromWpError extends AbstractResult implements ResultInterface {
   /**

@@ -264,12 +264,12 @@ final class InfoResult extends AbstractResult implements ResultInterface {
 /**
  * Create a result that contains an array as its value.
  *
- * Instances of the `ArrayResult` class function similarly to those of the
+ * Instances of the `ResultArray` class function similarly to those of the
  * `Result` class with one exception: their values are always arrays.
  *
  * @since v3.0.0
  */
-final class ArrayResult extends AbstractResult implements ResultInterface {
+final class ResultArray extends AbstractResult implements ResultInterface {
   /**
    * Create a new instance
    *

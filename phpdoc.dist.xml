@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdocumentor>
+    <title>wpHelpers API Documentation</title>
+    <parser>
+      <visibility>public</visibility>
+    </parser>
+    <transformer>
+        <target>docs</target>
+    </transformer>
+    <files>
+        <directory>./</directory>
+        <ignore>tests/</ignore>
+        <ignore>wpHelpers.php</ignore>
+    </files>
+</phpdocumentor>

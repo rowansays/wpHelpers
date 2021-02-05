@@ -6,9 +6,7 @@
  * @license GPL-3.0-or-later
  */
 
-namespace RowanSaysWpHelpers\Result\Test;
 use RowanSaysWpHelpers\Result\Result;
-use WP_UnitTestCase;
 
 require_once dirname(__DIR__) . '/Result/Result.php';
 

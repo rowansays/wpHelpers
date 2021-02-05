@@ -246,3 +246,32 @@ final class InfoResult extends AbstractResult implements ResultInterface {
     $this->log = $log;
   }
 }
+/**
+ * Create a result that contains an array as its value.
+ *
+ * Instances of the `ArrayResult` class function similarly to those of the
+ * `Result` class with one exception: their values are always arrays.
+ *
+ * @since v3.0.0
+ */
+final class ArrayResult extends AbstractResult implements ResultInterface {
+  /**
+   * Create a new instance
+   *
+   * @throws \TypeError when parameters are of an unrecognized type
+   */
+  public function __construct (
+    string $action,
+    ?string $state,
+    array $value,
+    iterable $log = []
+  ) {
+    parent::__construct($action, $state, $value, $log);
+  }
+  /**
+   * @return array
+   */
+  public function toValue () : array {
+    return $this->value;
+  }
+}

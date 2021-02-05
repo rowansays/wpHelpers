@@ -16,7 +16,6 @@ declare(strict_types = 1);
  */
 
 namespace RowanSaysWpHelpers\Result;
-
 /**
  * Defines signatures for all public methods of objects that behave as results.
  */
@@ -229,6 +228,21 @@ final class ResultFromWpError extends AbstractResult implements ResultInterface 
     $this->action = $action;
     $this->state = $error === null ? 'undefined' : 'failed';
     $this->value = $value;
+    $this->log = $log;
+  }
+}
+
+final class InfoResult extends AbstractResult implements ResultInterface {
+  public function __construct (string $action, iterable $log = []) {
+    if ($action === '') {
+      throw new \InvalidArgumentException('Parameter one $action must not be empty.');
+    }
+
+    $this->validateLogParameter($log, 'two');
+
+    $this->action = $action;
+    $this->state = 'undefined';
+    $this->value = null;
     $this->log = $log;
   }
 }

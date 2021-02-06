@@ -75,3 +75,66 @@ class TestGetMetaStringFromPost extends WP_UnitTestCase {
     $this->assertTrue($getMeta->failed('emptyValue'));
   }
 }
+
+class TestGetMetaStringFromTerm extends WP_UnitTestCase {
+  private int $termId = 0;
+  public function setUp(): void {
+    $insertTerm = wp_insert_term('Sample Term123', 'post_tag');
+    $id = $insertTerm['term_id'];
+
+    update_term_meta($id, '_wpHelpersNull', null);
+    update_term_meta($id, '_wpHelpersInt', 123);
+    update_term_meta($id, '_wpHelpersFloat', 1.23);
+    update_term_meta($id, '_wpHelpersString', 'ABC');
+    update_term_meta($id, '_wpHelpersArray', [1, 2, 3]);
+    update_term_meta($id, '_wpHelpersObject', (object) ['A' => 1, 'B' => 2, 'C' => 3]);
+
+    $this->termId = $id;
+  }
+  public function tearDown() : void {
+   wp_delete_term($this->termId, 'post_tag');
+  }
+  public function test_itPassesWhenMetaWasInsertedAsInt () {
+    $getMeta = getMetaString('term', $this->termId, '_wpHelpersInt');
+    $this->assertTrue($getMeta->passed());
+    $this->assertEquals('123', $getMeta->toValue());
+  }
+  public function test_itPassesWhenMetaWasInsertedAsFloat () {
+    $getMeta = getMetaString('term', $this->termId, '_wpHelpersFloat');
+    $this->assertTrue($getMeta->passed());
+    $this->assertEquals('1.23', $getMeta->toValue());
+  }
+  public function test_itPassesWhenMetaWasInsertedAsString () {
+    $getMeta = getMetaString('term', $this->termId, '_wpHelpersString');
+    $this->assertTrue($getMeta->passed());
+    $this->assertEquals('ABC', $getMeta->toValue());
+  }
+  public function test_itFailsWhenMetaWasInsertedAsArray () {
+    $getMeta = getMetaString('term', $this->termId, '_wpHelpersArray');
+    $this->assertTrue($getMeta->failed());
+    $this->assertEquals(1, count($getMeta));
+    $this->assertEquals('', $getMeta->toValue());
+    $this->assertTrue($getMeta->failed('invalidType'));
+  }
+  public function test_itFailsWhenMetaWasInsertedAsObject () {
+    $getMeta = getMetaString('term', $this->termId, '_wpHelpersObject');
+    $this->assertTrue($getMeta->failed());
+    $this->assertEquals(1, count($getMeta));
+    $this->assertEquals('', $getMeta->toValue());
+    $this->assertTrue($getMeta->failed('invalidType'));
+  }
+  public function test_itFailsWhenMetaWasInsertedAsNull () {
+    $getMeta = getMetaString('term', $this->termId, '_wpHelpersNull');
+    $this->assertTrue($getMeta->failed());
+    $this->assertEquals(1, count($getMeta));
+    $this->assertEquals('', $getMeta->toValue());
+    $this->assertTrue($getMeta->failed('emptyValue'));
+  }
+  public function test_itFailsWhenMetaDoesNotExist () {
+    $getMeta = getMetaString('term', $this->termId, '_iDoNotExist');
+    $this->assertTrue($getMeta->failed());
+    $this->assertEquals(1, count($getMeta));
+    $this->assertEquals('', $getMeta->toValue());
+    $this->assertTrue($getMeta->failed('emptyValue'));
+  }
+}

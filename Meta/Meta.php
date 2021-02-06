@@ -30,7 +30,6 @@ function getMetaString (string $type, int $id, string $key = '') : ResultString 
     'Requesting string for meta key [%1$s] from [%2$s] object having id [%3$s]',
     $key, $type, $id,
   );
-  $state = 'failed';
   $value = '';
   $results = [];
 
@@ -38,19 +37,21 @@ function getMetaString (string $type, int $id, string $key = '') : ResultString 
 
   if (is_string($meta)) {
     if (strlen($meta) > 0) {
-      $state = 'passed';
+      $code = 'passed';
       $value = $meta;
     } else {
+      $code = 'emptyValue';
       $results[] = new Result(
         'Either the requested key does not exist or has been saved with a ' .
         'value of an empty string or null'
       );
     }
   } else {
+    $code = 'invalidType';
     $results[] = new Result(sprintf(
       'The value stored for this key has a type of [%s]', gettype($meta)
     ));
   }
 
-  return new ResultString($action, $state, $value, $results);
+  return new ResultString($action, $code, $value, $results);
 }

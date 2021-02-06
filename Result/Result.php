@@ -23,6 +23,7 @@ namespace RowanSaysWpHelpers\Result;
  * @since v1.1.0
  */
 interface ResultInterface extends \Countable, \IteratorAggregate {
+  public function code() : string;
   /**
    * Did the result fail?
    *
@@ -56,7 +57,11 @@ abstract class AbstractResult {
    * Construct a new object that implements ResultInterface.
    *
    * @param string $action The name of the action that this result represents.
-   * @param string $state
+   * @param string|null $state Was the action successful, unsuccessful, or
+   *   undefined? Defaults to `null` which represents undefined results. Use
+   *   "passed" when this result succeeded. All other non-empty strings
+   *   indicate that the result has failed and their value be used as the error
+   *   code.
    * @param mixed $value
    * @param iterable<Result> $log
    *
@@ -72,7 +77,21 @@ abstract class AbstractResult {
       throw new \InvalidArgumentException('Parameter one $action must not be empty.');
     }
 
-    $this->validateState($state);
+    if ($state === null) {
+      $state = 'undefined';
+    } else if ($state === 'passed') {
+      $state = 'passed';
+    } else {
+      $trimmed = trim($state);
+      if (strlen($trimmed) === 0) {
+        throw new \InvalidArgumentException(
+          'The string passed for parameter two $state must not be empty'
+        );
+      } else {
+        $state = $trimmed;
+      }
+    }
+
     $this->validateLogParameter($log, 'four');
 
     $this->action = $action;
@@ -98,6 +117,14 @@ abstract class AbstractResult {
    */
   public function count () : int {
     return count($this->log);
+  }
+  /**
+   * Get the error code.
+   *
+   * @return string
+   */
+  public function code() : string {
+    return in_array($this->state, ['undefined', 'passed']) ? '' : $this->state;
   }
   /**
    * Retrieve an external iterator.
@@ -126,7 +153,7 @@ abstract class AbstractResult {
    * @return bool
    */
   public function failed () : bool {
-    return $this->state === 'failed';
+    return !in_array($this->state, ['passed', 'undefined']);
   }
   /**
    * Is the result positive?
@@ -171,22 +198,6 @@ abstract class AbstractResult {
           'instances of %2$s. %3$s', $position, $interface, $valueString
         ));
       }
-    }
-  }
-  /**
-   * Ensure that a given state value is valid.
-   *
-   * @throws \InvalidArgumentException
-   */
-  protected function validateState ($aught) : void {
-    $states = [null, 'failed', 'passed'];
-    if (!in_array($aught, $states, true)) {
-      throw new \InvalidArgumentException(sprintf(
-        'Parameter two `$state` has an unrecognized value of "%s". It must ' .
-        'be one of the following values: %s.',
-        $aught,
-        implode(', ', array_map(function ($s) { return '"' . $s . '"'; }, $states))
-      ));
     }
   }
 }

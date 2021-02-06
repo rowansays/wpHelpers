@@ -46,54 +46,32 @@ class TestGetMetaStringFromPost extends WP_UnitTestCase {
     $this->assertTrue($getMeta->passed());
     $this->assertEquals('ABC', $getMeta->toValue());
   }
-  public function test_itFailsWhenMetaWasInsertedAsNull () {
-    $getMeta = getMetaString('post', $this->postId, '_wpHelpersNull');
-    $this->assertTrue($getMeta->failed());
-    $this->assertEquals(1, count($getMeta));
-    $this->assertEquals('', $getMeta->toValue());
-    $template =
-      'Requesting string for meta key [_wpHelpersNull] from [post] object ' .
-      'having id [%d] (failed)' . "\n" .
-      '  * Either the requested key does not exist or has been saved with a ' .
-      'value of an empty string or null'
-    ;
-    $this->assertEquals(sprintf($template, $this->postId), $getMeta->toMarkdown());
-  }
   public function test_itFailsWhenMetaWasInsertedAsArray () {
     $getMeta = getMetaString('post', $this->postId, '_wpHelpersArray');
     $this->assertTrue($getMeta->failed());
     $this->assertEquals(1, count($getMeta));
     $this->assertEquals('', $getMeta->toValue());
-    $template =
-      'Requesting string for meta key [_wpHelpersArray] from [post] object ' .
-      'having id [%d] (failed)' . "\n" .
-      '  * The value stored for this key has a type of [array]'
-    ;
-    $this->assertEquals(sprintf($template, $this->postId), $getMeta->toMarkdown());
+    $this->assertTrue($getMeta->failed('invalidType'));
   }
   public function test_itFailsWhenMetaWasInsertedAsObject () {
     $getMeta = getMetaString('post', $this->postId, '_wpHelpersObject');
     $this->assertTrue($getMeta->failed());
     $this->assertEquals(1, count($getMeta));
     $this->assertEquals('', $getMeta->toValue());
-    $template =
-      'Requesting string for meta key [_wpHelpersObject] from [post] object ' .
-      'having id [%d] (failed)' . "\n" .
-      '  * The value stored for this key has a type of [object]'
-    ;
-    $this->assertEquals(sprintf($template, $this->postId), $getMeta->toMarkdown());
+    $this->assertTrue($getMeta->failed('invalidType'));
+  }
+  public function test_itFailsWhenMetaWasInsertedAsNull () {
+    $getMeta = getMetaString('post', $this->postId, '_wpHelpersNull');
+    $this->assertTrue($getMeta->failed());
+    $this->assertEquals(1, count($getMeta));
+    $this->assertEquals('', $getMeta->toValue());
+    $this->assertTrue($getMeta->failed('emptyValue'));
   }
   public function test_itFailsWhenMetaDoesNotExist () {
     $getMeta = getMetaString('post', $this->postId, '_iDoNotExist');
     $this->assertTrue($getMeta->failed());
     $this->assertEquals(1, count($getMeta));
     $this->assertEquals('', $getMeta->toValue());
-    $template =
-        'Requesting string for meta key [_iDoNotExist] from [post] object ' .
-        'having id [%d] (failed)' . "\n" .
-        '  * Either the requested key does not exist or has been saved with a ' .
-        'value of an empty string or null'
-      ;
-    $this->assertEquals(sprintf($template, $this->postId), $getMeta->toMarkdown());
+    $this->assertTrue($getMeta->failed('emptyValue'));
   }
 }

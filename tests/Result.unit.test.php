@@ -61,26 +61,28 @@ class TestResultConstructor extends WP_UnitTestCase {
     $result = new Result('Testing', null, null, [new \StdClass()]);
   }
 }
-class Test_Result_code extends WP_UnitTestCase {
+class Test_Result_failed extends WP_UnitTestCase {
   public function test_itIsCallable () {
     $result = new Result('Testing');
-    $this->assertIsCallable([$result, 'code']);
+    $this->assertIsCallable([$result, 'failed']);
   }
   public function test_itReturnsEmptyStringForUndefinedResults () {
     $result = new Result('Testing');
-    $this->assertEquals('', $result->code());
+    $this->assertFalse($result->failed());
   }
   public function test_itReturnsEmptyStringForSuccessfulResults () {
     $result = new Result('Testing', 'passed');
-    $this->assertEquals('', $result->code());
+    $this->assertFalse($result->failed());
   }
   public function test_itReturnsFailedForUnsuccessfulResults () {
     $result = new Result('Testing', 'failed');
-    $this->assertEquals('failed', $result->code());
+    $this->assertTrue($result->failed());
+    $this->assertTrue($result->failed('failed'));
   }
   public function test_itReturnsCustomErrorCode () {
     $result = new Result('Testing', 'customErrorCode');
-    $this->assertEquals('customErrorCode', $result->code());
+    $this->assertTrue($result->failed());
+    $this->assertTrue($result->failed('customErrorCode'));
   }
 }
 class Test_Result_toMarkdown extends WP_UnitTestCase {

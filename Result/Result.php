@@ -23,13 +23,12 @@ namespace RowanSaysWpHelpers\Result;
  * @since v1.1.0
  */
 interface ResultInterface extends \Countable, \IteratorAggregate {
-  public function code() : string;
   /**
    * Did the result fail?
    *
    * @return bool
    */
-  public function failed () : bool;
+  public function failed (?string $code) : bool;
   /**
    * Did the result pass?
    *
@@ -119,14 +118,6 @@ abstract class AbstractResult {
     return count($this->log);
   }
   /**
-   * Get the error code.
-   *
-   * @return string
-   */
-  public function code() : string {
-    return in_array($this->state, ['undefined', 'passed']) ? '' : $this->state;
-  }
-  /**
    * Retrieve an external iterator.
    *
    * This method single-handedly fulfills the requirements of PHP's built-in
@@ -150,10 +141,18 @@ abstract class AbstractResult {
   /**
    * Is the result negative?
    *
+   * @param string|null $code Optional error code
    * @return bool
    */
-  public function failed () : bool {
-    return !in_array($this->state, ['passed', 'undefined']);
+  public function failed (?string $code = null) : bool {
+    $nonFails = ['passed', 'undefined'];
+    if ($code === null) {
+      return !in_array($this->state, $nonFails);
+    } else if (in_array($code, $nonFails)) {
+      return false;
+    } else {
+      return $code === $this->state;
+    }
   }
   /**
    * Is the result positive?
